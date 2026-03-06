@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
-import type { TranslationResult } from '../../shared-types/src/index.js';
-import { normalizeSentence, localTranslateSentence } from './dictionary.js';
+import type { EnglishGlossResult, TranslationResult } from '../../shared-types/src/index.js';
+import { localGlossToEnglish, normalizeSentence, localTranslateSentence } from './dictionary.js';
 
 export interface TranslationStore {
   getCachedTranslation(hash: string): TranslationResult | null;
@@ -11,6 +11,11 @@ interface OpenAiOutput {
   koreanSentence: string;
   confidence: number;
   keyTerms: string[];
+}
+
+interface OpenAiEnglishOutput {
+  englishText: string;
+  confidence: number;
 }
 
 const OPENAI_URL = 'https://api.openai.com/v1/chat/completions';
@@ -29,6 +34,21 @@ function safeParseJson(content: string): OpenAiOutput | null {
       koreanSentence: String(parsed.koreanSentence),
       confidence: Number.isFinite(parsed.confidence) ? Number(parsed.confidence) : 0.7,
       keyTerms: parsed.keyTerms.map((term) => String(term))
+    };
+  } catch {
+    return null;
+  }
+}
+
+function safeParseEnglishJson(content: string): OpenAiEnglishOutput | null {
+  try {
+    const parsed = JSON.parse(content) as Partial<OpenAiEnglishOutput>;
+    if (!parsed.englishText) {
+      return null;
+    }
+    return {
+      englishText: String(parsed.englishText),
+      confidence: Number.isFinite(parsed.confidence) ? Number(parsed.confidence) : 0.7
     };
   } catch {
     return null;
@@ -84,6 +104,59 @@ async function requestOpenAiTranslation(text: string): Promise<OpenAiOutput | nu
   return safeParseJson(content);
 }
 
+async function requestOpenAiEnglishGloss(text: string): Promise<OpenAiEnglishOutput | null> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return null;
+  }
+
+  const model = process.env.OPENAI_MODEL || 'gpt-4.1-mini';
+  const payload = {
+    model,
+    temperature: 0.1,
+    response_format: { type: 'json_object' },
+    messages: [
+      {
+        role: 'system',
+        content:
+          'Translate user text into concise natural English for vocabulary lookup. Return JSON with keys: englishText (string), confidence (0-1).'
+      },
+      {
+        role: 'user',
+        content: text
+      }
+    ]
+  };
+
+  const response = await fetch(OPENAI_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const body = (await response.json()) as {
+    choices?: Array<{ message?: { content?: string } }>;
+  };
+
+  const content = body.choices?.[0]?.message?.content;
+  if (!content) {
+    return null;
+  }
+
+  return safeParseEnglishJson(content);
+}
+
+function containsHangul(text: string): boolean {
+  return /[\u3131-\u318e\uac00-\ud7a3]/.test(text);
+}
+
 export async function translateSentence(text: string, store: TranslationStore): Promise<TranslationResult> {
   const normalized = normalizeSentence(text);
   const hash = hashText(normalized);
@@ -128,4 +201,47 @@ export async function translateSentence(text: string, store: TranslationStore): 
   };
   store.saveCachedTranslation(hash, normalized, fallback);
   return fallback;
+}
+
+export async function glossToEnglish(text: string): Promise<EnglishGlossResult> {
+  const trimmed = text.trim();
+  if (!trimmed) {
+    return {
+      englishText: '',
+      confidence: 0,
+      source: 'identity'
+    };
+  }
+
+  if (!containsHangul(trimmed)) {
+    return {
+      englishText: trimmed,
+      confidence: 1,
+      source: 'identity'
+    };
+  }
+
+  const local = localGlossToEnglish(trimmed);
+  if (local && local.confidence >= 0.5) {
+    return {
+      englishText: local.meaning,
+      confidence: local.confidence,
+      source: 'local_gloss'
+    };
+  }
+
+  const ai = await requestOpenAiEnglishGloss(trimmed);
+  if (ai) {
+    return {
+      englishText: ai.englishText,
+      confidence: Math.max(0, Math.min(1, ai.confidence)),
+      source: 'openai_fallback'
+    };
+  }
+
+  return {
+    englishText: local?.meaning || trimmed,
+    confidence: local?.confidence || 0.2,
+    source: local ? 'local_gloss' : 'identity'
+  };
 }

@@ -45,6 +45,15 @@ export const TranslationResultSchema = z.object({
 });
 export type TranslationResult = z.infer<typeof TranslationResultSchema>;
 
+export const EnglishGlossSourceSchema = z.enum(['local_gloss', 'openai_fallback', 'identity']);
+
+export const EnglishGlossResultSchema = z.object({
+  englishText: z.string(),
+  confidence: z.number(),
+  source: EnglishGlossSourceSchema
+});
+export type EnglishGlossResult = z.infer<typeof EnglishGlossResultSchema>;
+
 export const DocSyncResultSchema = z.object({
   updatedFiles: z.array(z.string()),
   sessionId: z.string().optional(),
@@ -121,3 +130,8 @@ export const TranslateSentenceInputSchema = z.object({
   text: z.string().min(1)
 });
 export type TranslateSentenceInput = z.infer<typeof TranslateSentenceInputSchema>;
+
+export const TranslateToEnglishInputSchema = z.object({
+  text: z.string().min(1)
+});
+export type TranslateToEnglishInput = z.infer<typeof TranslateToEnglishInputSchema>;

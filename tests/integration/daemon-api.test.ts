@@ -80,5 +80,15 @@ describe('daemon API', () => {
 
     expect(lookup.statusCode).toBe(200);
     expect(lookup.json().found).toBe(true);
+
+    const toEnglish = await fastify.inject({
+      method: 'POST',
+      url: '/v1/translate/to-english',
+      payload: {
+        text: '검색 설정'
+      }
+    });
+    expect(toEnglish.statusCode).toBe(200);
+    expect(toEnglish.json().englishText).toContain('search');
   });
 });

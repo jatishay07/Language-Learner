@@ -8,6 +8,7 @@ import {
   type AttemptResult,
   type DayStatus,
   type DocSyncResult,
+  type EnglishGlossResult,
   type Exercise,
   type ExerciseCategory,
   type LookupResult,
@@ -34,7 +35,8 @@ import { buildPaths, ensureAppDirs, resolveProjectRoot } from './paths.js';
 import { deriveRank } from './rank.js';
 import { transitionReviewState } from './srs.js';
 import { clampNumber, formatLocalDate, addDays, compareDateIso, nowIso } from './time.js';
-import { type TranslationStore, translateSentence } from './translation.js';
+import { glossToEnglish, type TranslationStore, translateSentence } from './translation.js';
+import { localGlossToEnglish } from './dictionary.js';
 
 interface LearnerEngineOptions {
   rootDir?: string;
@@ -367,6 +369,14 @@ export class LearnerEngine implements TranslationStore {
       .get('ko', normalized) as { surface: string; meaning: string; example_ko: string } | undefined;
 
     if (!row) {
+      const gloss = localGlossToEnglish(normalized);
+      if (gloss) {
+        return {
+          text: normalized,
+          found: true,
+          meaning: gloss.meaning
+        };
+      }
       return {
         text: normalized,
         found: false
@@ -383,6 +393,10 @@ export class LearnerEngine implements TranslationStore {
 
   async translateSentenceInput(text: string): Promise<TranslationResult> {
     return translateSentence(text, this);
+  }
+
+  async translateToEnglishInput(text: string): Promise<EnglishGlossResult> {
+    return glossToEnglish(text);
   }
 
   getCachedTranslation(hash: string): TranslationResult | null {
@@ -578,7 +592,7 @@ export class LearnerEngine implements TranslationStore {
 
     if (category === 'new') {
       return this.db
-        .prepare('SELECT * FROM vocab WHERE seen_count = 0 ORDER BY id ASC LIMIT 1')
+        .prepare('SELECT * FROM vocab WHERE seen_count = 0 ORDER BY RANDOM() LIMIT 1')
         .get() as VocabRow | undefined;
     }
 

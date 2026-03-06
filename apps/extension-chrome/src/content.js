@@ -91,6 +91,24 @@ async function lookupText(text) {
   return response.json();
 }
 
+async function translateToEnglish(text) {
+  const response = await fetch(`${DAEMON_BASE}/v1/translate/to-english`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text })
+  });
+
+  if (!response.ok) {
+    throw new Error('English translation failed');
+  }
+
+  return response.json();
+}
+
+function containsHangul(text) {
+  return /[\u3131-\u318e\uac00-\ud7a3]/.test(text);
+}
+
 async function saveText(payload) {
   const response = await fetch(`${DAEMON_BASE}/v1/vocab/save`, {
     method: 'POST',
@@ -121,8 +139,8 @@ function showPopup({ text, meaning, exampleKo, x, y }) {
   popup.style.fontFamily = "'SF Mono', Menlo, monospace";
   popup.innerHTML = `
     <div style="font-weight:bold; margin-bottom:6px;">${text}</div>
-    <div style="font-size:12px; margin-bottom:6px;">Meaning</div>
-    <input id="korean-meaning-input" value="${(meaning || 'Add a meaning note').replace(/"/g, '&quot;')}" style="width:100%; margin-bottom:8px;" />
+    <div style="font-size:12px; margin-bottom:6px;">Meaning (English)</div>
+    <input id="korean-meaning-input" value="${(meaning || 'Add English meaning note').replace(/"/g, '&quot;')}" style="width:100%; margin-bottom:8px;" />
     <div style="font-size:12px; margin-bottom:6px; color:#334;">${exampleKo || 'No example stored yet.'}</div>
     <button id="korean-save-btn" style="width:100%; background:#2f6f4f; color:#fff; border:none; border-radius:6px; padding:6px; cursor:pointer;">Save to Vocabulary</button>
     <button id="korean-close-btn" style="width:100%; margin-top:6px; border:1px solid #999; border-radius:6px; padding:6px; background:white; cursor:pointer;">Close</button>
@@ -157,21 +175,39 @@ async function handleSelection(event) {
 
   try {
     const lookup = await lookupText(selectedText);
+    let englishMeaning = (lookup.meaning || '').trim();
+
+    if (!englishMeaning || containsHangul(englishMeaning)) {
+      const english = await translateToEnglish(englishMeaning || selectedText);
+      englishMeaning = (english.englishText || '').trim() || englishMeaning;
+    }
+
     showPopup({
       text: selectedText,
-      meaning: lookup.meaning || '',
+      meaning: englishMeaning,
       exampleKo: lookup.exampleKo || '',
       x: event.clientX,
       y: event.clientY
     });
   } catch {
-    showPopup({
-      text: selectedText,
-      meaning: '',
-      exampleKo: '',
-      x: event.clientX,
-      y: event.clientY
-    });
+    try {
+      const english = await translateToEnglish(selectedText);
+      showPopup({
+        text: selectedText,
+        meaning: (english.englishText || '').trim(),
+        exampleKo: '',
+        x: event.clientX,
+        y: event.clientY
+      });
+    } catch {
+      showPopup({
+        text: selectedText,
+        meaning: '',
+        exampleKo: '',
+        x: event.clientX,
+        y: event.clientY
+      });
+    }
   }
 }
 

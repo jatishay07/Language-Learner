@@ -33,6 +33,10 @@ const PHRASE_MAP: Record<string, string> = {
   goodbye: '안녕히 가세요'
 };
 
+const REVERSE_PHRASE_MAP: Record<string, string> = Object.fromEntries(
+  Object.entries(PHRASE_MAP).map(([english, korean]) => [korean.toLowerCase(), english])
+);
+
 export interface LocalTranslation {
   koreanSentence: string;
   confidence: number;
@@ -81,5 +85,50 @@ export function localTranslateSentence(text: string): LocalTranslation {
     koreanSentence: koreanSentence.length > 0 ? koreanSentence : text,
     confidence,
     keyTerms: Array.from(new Set(keyTerms))
+  };
+}
+
+export function localGlossToEnglish(text: string): { meaning: string; confidence: number } | null {
+  const cleaned = text
+    .trim()
+    .toLowerCase()
+    .replace(/[^\u3131-\u318e\uac00-\ud7a3a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (!cleaned) {
+    return null;
+  }
+
+  const exact = REVERSE_PHRASE_MAP[cleaned];
+  if (exact) {
+    return {
+      meaning: exact,
+      confidence: 1
+    };
+  }
+
+  const tokens = cleaned.split(' ').filter(Boolean);
+  if (tokens.length === 0) {
+    return null;
+  }
+
+  let known = 0;
+  const translatedTokens = tokens.map((token) => {
+    const mapped = REVERSE_PHRASE_MAP[token];
+    if (mapped) {
+      known += 1;
+      return mapped;
+    }
+    return token;
+  });
+
+  if (known === 0) {
+    return null;
+  }
+
+  return {
+    meaning: translatedTokens.join(' '),
+    confidence: clampNumber(known / tokens.length, 0, 1)
   };
 }

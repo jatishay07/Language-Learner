@@ -3,7 +3,8 @@ import cors from '@fastify/cors';
 import {
   AttemptInputSchema,
   SaveVocabInputSchema,
-  TranslateSentenceInputSchema
+  TranslateSentenceInputSchema,
+  TranslateToEnglishInputSchema
 } from '../../../packages/shared-types/src/index.js';
 import { APP_HOST, APP_PORT, LearnerEngine } from '../../../packages/core/src/index.js';
 
@@ -75,6 +76,18 @@ export function createDaemonServer(options?: DaemonServerOptions) {
       reply.status(400);
       return {
         error: error instanceof Error ? error.message : 'Invalid translation payload'
+      };
+    }
+  });
+
+  fastify.post('/v1/translate/to-english', async (request, reply) => {
+    try {
+      const parsed = TranslateToEnglishInputSchema.parse(request.body);
+      return await engine.translateToEnglishInput(parsed.text);
+    } catch (error) {
+      reply.status(400);
+      return {
+        error: error instanceof Error ? error.message : 'Invalid english translation payload'
       };
     }
   });
