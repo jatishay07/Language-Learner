@@ -1,0 +1,131 @@
+import { createHash } from 'node:crypto';
+import type { TranslationResult } from '../../shared-types/src/index.js';
+import { normalizeSentence, localTranslateSentence } from './dictionary.js';
+
+export interface TranslationStore {
+  getCachedTranslation(hash: string): TranslationResult | null;
+  saveCachedTranslation(hash: string, inputText: string, result: TranslationResult): void;
+}
+
+interface OpenAiOutput {
+  koreanSentence: string;
+  confidence: number;
+  keyTerms: string[];
+}
+
+const OPENAI_URL = 'https://api.openai.com/v1/chat/completions';
+
+function hashText(input: string): string {
+  return createHash('sha256').update(input).digest('hex');
+}
+
+function safeParseJson(content: string): OpenAiOutput | null {
+  try {
+    const parsed = JSON.parse(content) as Partial<OpenAiOutput>;
+    if (!parsed.koreanSentence || !Array.isArray(parsed.keyTerms)) {
+      return null;
+    }
+    return {
+      koreanSentence: String(parsed.koreanSentence),
+      confidence: Number.isFinite(parsed.confidence) ? Number(parsed.confidence) : 0.7,
+      keyTerms: parsed.keyTerms.map((term) => String(term))
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function requestOpenAiTranslation(text: string): Promise<OpenAiOutput | null> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return null;
+  }
+
+  const model = process.env.OPENAI_MODEL || 'gpt-4.1-mini';
+  const payload = {
+    model,
+    temperature: 0.2,
+    response_format: { type: 'json_object' },
+    messages: [
+      {
+        role: 'system',
+        content:
+          'Translate user text into natural Korean for learning. Return JSON with keys: koreanSentence (string), confidence (0-1), keyTerms (array of Korean words).'
+      },
+      {
+        role: 'user',
+        content: text
+      }
+    ]
+  };
+
+  const response = await fetch(OPENAI_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const body = (await response.json()) as {
+    choices?: Array<{ message?: { content?: string } }>;
+  };
+
+  const content = body.choices?.[0]?.message?.content;
+  if (!content) {
+    return null;
+  }
+
+  return safeParseJson(content);
+}
+
+export async function translateSentence(text: string, store: TranslationStore): Promise<TranslationResult> {
+  const normalized = normalizeSentence(text);
+  const hash = hashText(normalized);
+
+  const cached = store.getCachedTranslation(hash);
+  if (cached) {
+    return {
+      ...cached,
+      source: 'cache'
+    };
+  }
+
+  const local = localTranslateSentence(text);
+  if (local.confidence >= 0.55) {
+    const result: TranslationResult = {
+      koreanSentence: local.koreanSentence,
+      confidence: local.confidence,
+      keyTerms: local.keyTerms,
+      source: 'local_dictionary'
+    };
+    store.saveCachedTranslation(hash, normalized, result);
+    return result;
+  }
+
+  const ai = await requestOpenAiTranslation(text);
+  if (ai) {
+    const result: TranslationResult = {
+      koreanSentence: ai.koreanSentence,
+      confidence: Math.max(0, Math.min(1, ai.confidence)),
+      keyTerms: ai.keyTerms,
+      source: 'openai_fallback'
+    };
+    store.saveCachedTranslation(hash, normalized, result);
+    return result;
+  }
+
+  const fallback: TranslationResult = {
+    koreanSentence: local.koreanSentence,
+    confidence: local.confidence,
+    keyTerms: local.keyTerms,
+    source: 'local_dictionary'
+  };
+  store.saveCachedTranslation(hash, normalized, fallback);
+  return fallback;
+}

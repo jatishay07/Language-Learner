@@ -1,0 +1,1802 @@
+[
+  {
+    "surface": "안녕하세요",
+    "meaning": "hello",
+    "exampleKo": "안녕하세요를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "안녕하세요 연습",
+    "meaning": "practice: hello",
+    "exampleKo": "안녕하세요 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "안녕하세요 복습",
+    "meaning": "review: hello",
+    "exampleKo": "안녕하세요 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "안녕하세요 문장",
+    "meaning": "sentence with hello",
+    "exampleKo": "이 문장에서 안녕하세요를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "안녕하세요 질문",
+    "meaning": "question about hello",
+    "exampleKo": "안녕하세요에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "감사합니다",
+    "meaning": "thank you",
+    "exampleKo": "감사합니다를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "감사합니다 연습",
+    "meaning": "practice: thank you",
+    "exampleKo": "감사합니다 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "감사합니다 복습",
+    "meaning": "review: thank you",
+    "exampleKo": "감사합니다 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "감사합니다 문장",
+    "meaning": "sentence with thank you",
+    "exampleKo": "이 문장에서 감사합니다를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "감사합니다 질문",
+    "meaning": "question about thank you",
+    "exampleKo": "감사합니다에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "죄송합니다",
+    "meaning": "sorry",
+    "exampleKo": "죄송합니다를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "죄송합니다 연습",
+    "meaning": "practice: sorry",
+    "exampleKo": "죄송합니다 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "죄송합니다 복습",
+    "meaning": "review: sorry",
+    "exampleKo": "죄송합니다 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "죄송합니다 문장",
+    "meaning": "sentence with sorry",
+    "exampleKo": "이 문장에서 죄송합니다를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "죄송합니다 질문",
+    "meaning": "question about sorry",
+    "exampleKo": "죄송합니다에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "네",
+    "meaning": "yes",
+    "exampleKo": "네를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "네 연습",
+    "meaning": "practice: yes",
+    "exampleKo": "네 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "네 복습",
+    "meaning": "review: yes",
+    "exampleKo": "네 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "네 문장",
+    "meaning": "sentence with yes",
+    "exampleKo": "이 문장에서 네를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "네 질문",
+    "meaning": "question about yes",
+    "exampleKo": "네에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "아니요",
+    "meaning": "no",
+    "exampleKo": "아니요를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "아니요 연습",
+    "meaning": "practice: no",
+    "exampleKo": "아니요 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "아니요 복습",
+    "meaning": "review: no",
+    "exampleKo": "아니요 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "아니요 문장",
+    "meaning": "sentence with no",
+    "exampleKo": "이 문장에서 아니요를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "아니요 질문",
+    "meaning": "question about no",
+    "exampleKo": "아니요에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "물",
+    "meaning": "water",
+    "exampleKo": "물를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "물 연습",
+    "meaning": "practice: water",
+    "exampleKo": "물 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "물 복습",
+    "meaning": "review: water",
+    "exampleKo": "물 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "물 문장",
+    "meaning": "sentence with water",
+    "exampleKo": "이 문장에서 물를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "물 질문",
+    "meaning": "question about water",
+    "exampleKo": "물에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "커피",
+    "meaning": "coffee",
+    "exampleKo": "커피를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "커피 연습",
+    "meaning": "practice: coffee",
+    "exampleKo": "커피 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "커피 복습",
+    "meaning": "review: coffee",
+    "exampleKo": "커피 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "커피 문장",
+    "meaning": "sentence with coffee",
+    "exampleKo": "이 문장에서 커피를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "커피 질문",
+    "meaning": "question about coffee",
+    "exampleKo": "커피에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "차",
+    "meaning": "tea",
+    "exampleKo": "차를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "차 연습",
+    "meaning": "practice: tea",
+    "exampleKo": "차 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "차 복습",
+    "meaning": "review: tea",
+    "exampleKo": "차 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "차 문장",
+    "meaning": "sentence with tea",
+    "exampleKo": "이 문장에서 차를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "차 질문",
+    "meaning": "question about tea",
+    "exampleKo": "차에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "밥",
+    "meaning": "rice meal",
+    "exampleKo": "밥를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "밥 연습",
+    "meaning": "practice: rice meal",
+    "exampleKo": "밥 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "밥 복습",
+    "meaning": "review: rice meal",
+    "exampleKo": "밥 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "밥 문장",
+    "meaning": "sentence with rice meal",
+    "exampleKo": "이 문장에서 밥를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "밥 질문",
+    "meaning": "question about rice meal",
+    "exampleKo": "밥에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "빵",
+    "meaning": "bread",
+    "exampleKo": "빵를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "빵 연습",
+    "meaning": "practice: bread",
+    "exampleKo": "빵 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "빵 복습",
+    "meaning": "review: bread",
+    "exampleKo": "빵 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "빵 문장",
+    "meaning": "sentence with bread",
+    "exampleKo": "이 문장에서 빵를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "빵 질문",
+    "meaning": "question about bread",
+    "exampleKo": "빵에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "사과",
+    "meaning": "apple",
+    "exampleKo": "사과를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "사과 연습",
+    "meaning": "practice: apple",
+    "exampleKo": "사과 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "사과 복습",
+    "meaning": "review: apple",
+    "exampleKo": "사과 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "사과 문장",
+    "meaning": "sentence with apple",
+    "exampleKo": "이 문장에서 사과를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "사과 질문",
+    "meaning": "question about apple",
+    "exampleKo": "사과에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "학교",
+    "meaning": "school",
+    "exampleKo": "학교를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "학교 연습",
+    "meaning": "practice: school",
+    "exampleKo": "학교 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "학교 복습",
+    "meaning": "review: school",
+    "exampleKo": "학교 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "학교 문장",
+    "meaning": "sentence with school",
+    "exampleKo": "이 문장에서 학교를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "학교 질문",
+    "meaning": "question about school",
+    "exampleKo": "학교에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "학생",
+    "meaning": "student",
+    "exampleKo": "학생를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "학생 연습",
+    "meaning": "practice: student",
+    "exampleKo": "학생 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "학생 복습",
+    "meaning": "review: student",
+    "exampleKo": "학생 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "학생 문장",
+    "meaning": "sentence with student",
+    "exampleKo": "이 문장에서 학생를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "학생 질문",
+    "meaning": "question about student",
+    "exampleKo": "학생에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "선생님",
+    "meaning": "teacher",
+    "exampleKo": "선생님를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "선생님 연습",
+    "meaning": "practice: teacher",
+    "exampleKo": "선생님 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "선생님 복습",
+    "meaning": "review: teacher",
+    "exampleKo": "선생님 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "선생님 문장",
+    "meaning": "sentence with teacher",
+    "exampleKo": "이 문장에서 선생님를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "선생님 질문",
+    "meaning": "question about teacher",
+    "exampleKo": "선생님에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "친구",
+    "meaning": "friend",
+    "exampleKo": "친구를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "친구 연습",
+    "meaning": "practice: friend",
+    "exampleKo": "친구 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "친구 복습",
+    "meaning": "review: friend",
+    "exampleKo": "친구 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "친구 문장",
+    "meaning": "sentence with friend",
+    "exampleKo": "이 문장에서 친구를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "친구 질문",
+    "meaning": "question about friend",
+    "exampleKo": "친구에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "가족",
+    "meaning": "family",
+    "exampleKo": "가족를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "가족 연습",
+    "meaning": "practice: family",
+    "exampleKo": "가족 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "가족 복습",
+    "meaning": "review: family",
+    "exampleKo": "가족 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "가족 문장",
+    "meaning": "sentence with family",
+    "exampleKo": "이 문장에서 가족를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "가족 질문",
+    "meaning": "question about family",
+    "exampleKo": "가족에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "엄마",
+    "meaning": "mother",
+    "exampleKo": "엄마를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "엄마 연습",
+    "meaning": "practice: mother",
+    "exampleKo": "엄마 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "엄마 복습",
+    "meaning": "review: mother",
+    "exampleKo": "엄마 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "엄마 문장",
+    "meaning": "sentence with mother",
+    "exampleKo": "이 문장에서 엄마를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "엄마 질문",
+    "meaning": "question about mother",
+    "exampleKo": "엄마에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "아빠",
+    "meaning": "father",
+    "exampleKo": "아빠를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "아빠 연습",
+    "meaning": "practice: father",
+    "exampleKo": "아빠 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "아빠 복습",
+    "meaning": "review: father",
+    "exampleKo": "아빠 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "아빠 문장",
+    "meaning": "sentence with father",
+    "exampleKo": "이 문장에서 아빠를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "아빠 질문",
+    "meaning": "question about father",
+    "exampleKo": "아빠에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "형",
+    "meaning": "older brother (male speaker)",
+    "exampleKo": "형를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "형 연습",
+    "meaning": "practice: older brother (male speaker)",
+    "exampleKo": "형 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "형 복습",
+    "meaning": "review: older brother (male speaker)",
+    "exampleKo": "형 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "형 문장",
+    "meaning": "sentence with older brother (male speaker)",
+    "exampleKo": "이 문장에서 형를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "형 질문",
+    "meaning": "question about older brother (male speaker)",
+    "exampleKo": "형에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "누나",
+    "meaning": "older sister (male speaker)",
+    "exampleKo": "누나를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "누나 연습",
+    "meaning": "practice: older sister (male speaker)",
+    "exampleKo": "누나 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "누나 복습",
+    "meaning": "review: older sister (male speaker)",
+    "exampleKo": "누나 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "누나 문장",
+    "meaning": "sentence with older sister (male speaker)",
+    "exampleKo": "이 문장에서 누나를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "누나 질문",
+    "meaning": "question about older sister (male speaker)",
+    "exampleKo": "누나에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "언니",
+    "meaning": "older sister (female speaker)",
+    "exampleKo": "언니를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "언니 연습",
+    "meaning": "practice: older sister (female speaker)",
+    "exampleKo": "언니 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "언니 복습",
+    "meaning": "review: older sister (female speaker)",
+    "exampleKo": "언니 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "언니 문장",
+    "meaning": "sentence with older sister (female speaker)",
+    "exampleKo": "이 문장에서 언니를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "언니 질문",
+    "meaning": "question about older sister (female speaker)",
+    "exampleKo": "언니에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "오빠",
+    "meaning": "older brother (female speaker)",
+    "exampleKo": "오빠를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "오빠 연습",
+    "meaning": "practice: older brother (female speaker)",
+    "exampleKo": "오빠 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "오빠 복습",
+    "meaning": "review: older brother (female speaker)",
+    "exampleKo": "오빠 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "오빠 문장",
+    "meaning": "sentence with older brother (female speaker)",
+    "exampleKo": "이 문장에서 오빠를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "오빠 질문",
+    "meaning": "question about older brother (female speaker)",
+    "exampleKo": "오빠에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "집",
+    "meaning": "house",
+    "exampleKo": "집를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "집 연습",
+    "meaning": "practice: house",
+    "exampleKo": "집 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "집 복습",
+    "meaning": "review: house",
+    "exampleKo": "집 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "집 문장",
+    "meaning": "sentence with house",
+    "exampleKo": "이 문장에서 집를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "집 질문",
+    "meaning": "question about house",
+    "exampleKo": "집에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "방",
+    "meaning": "room",
+    "exampleKo": "방를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "방 연습",
+    "meaning": "practice: room",
+    "exampleKo": "방 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "방 복습",
+    "meaning": "review: room",
+    "exampleKo": "방 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "방 문장",
+    "meaning": "sentence with room",
+    "exampleKo": "이 문장에서 방를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "방 질문",
+    "meaning": "question about room",
+    "exampleKo": "방에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "책",
+    "meaning": "book",
+    "exampleKo": "책를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "책 연습",
+    "meaning": "practice: book",
+    "exampleKo": "책 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "책 복습",
+    "meaning": "review: book",
+    "exampleKo": "책 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "책 문장",
+    "meaning": "sentence with book",
+    "exampleKo": "이 문장에서 책를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "책 질문",
+    "meaning": "question about book",
+    "exampleKo": "책에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "연필",
+    "meaning": "pencil",
+    "exampleKo": "연필를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "연필 연습",
+    "meaning": "practice: pencil",
+    "exampleKo": "연필 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "연필 복습",
+    "meaning": "review: pencil",
+    "exampleKo": "연필 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "연필 문장",
+    "meaning": "sentence with pencil",
+    "exampleKo": "이 문장에서 연필를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "연필 질문",
+    "meaning": "question about pencil",
+    "exampleKo": "연필에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "가방",
+    "meaning": "bag",
+    "exampleKo": "가방를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "가방 연습",
+    "meaning": "practice: bag",
+    "exampleKo": "가방 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "가방 복습",
+    "meaning": "review: bag",
+    "exampleKo": "가방 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "가방 문장",
+    "meaning": "sentence with bag",
+    "exampleKo": "이 문장에서 가방를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "가방 질문",
+    "meaning": "question about bag",
+    "exampleKo": "가방에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "컴퓨터",
+    "meaning": "computer",
+    "exampleKo": "컴퓨터를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "컴퓨터 연습",
+    "meaning": "practice: computer",
+    "exampleKo": "컴퓨터 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "컴퓨터 복습",
+    "meaning": "review: computer",
+    "exampleKo": "컴퓨터 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "컴퓨터 문장",
+    "meaning": "sentence with computer",
+    "exampleKo": "이 문장에서 컴퓨터를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "컴퓨터 질문",
+    "meaning": "question about computer",
+    "exampleKo": "컴퓨터에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "핸드폰",
+    "meaning": "phone",
+    "exampleKo": "핸드폰를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "핸드폰 연습",
+    "meaning": "practice: phone",
+    "exampleKo": "핸드폰 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "핸드폰 복습",
+    "meaning": "review: phone",
+    "exampleKo": "핸드폰 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "핸드폰 문장",
+    "meaning": "sentence with phone",
+    "exampleKo": "이 문장에서 핸드폰를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "핸드폰 질문",
+    "meaning": "question about phone",
+    "exampleKo": "핸드폰에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "시계",
+    "meaning": "watch",
+    "exampleKo": "시계를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "시계 연습",
+    "meaning": "practice: watch",
+    "exampleKo": "시계 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "시계 복습",
+    "meaning": "review: watch",
+    "exampleKo": "시계 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "시계 문장",
+    "meaning": "sentence with watch",
+    "exampleKo": "이 문장에서 시계를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "시계 질문",
+    "meaning": "question about watch",
+    "exampleKo": "시계에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "시간",
+    "meaning": "time",
+    "exampleKo": "시간를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "시간 연습",
+    "meaning": "practice: time",
+    "exampleKo": "시간 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "시간 복습",
+    "meaning": "review: time",
+    "exampleKo": "시간 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "시간 문장",
+    "meaning": "sentence with time",
+    "exampleKo": "이 문장에서 시간를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "시간 질문",
+    "meaning": "question about time",
+    "exampleKo": "시간에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "오늘",
+    "meaning": "today",
+    "exampleKo": "오늘를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "오늘 연습",
+    "meaning": "practice: today",
+    "exampleKo": "오늘 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "오늘 복습",
+    "meaning": "review: today",
+    "exampleKo": "오늘 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "오늘 문장",
+    "meaning": "sentence with today",
+    "exampleKo": "이 문장에서 오늘를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "오늘 질문",
+    "meaning": "question about today",
+    "exampleKo": "오늘에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "내일",
+    "meaning": "tomorrow",
+    "exampleKo": "내일를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "내일 연습",
+    "meaning": "practice: tomorrow",
+    "exampleKo": "내일 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "내일 복습",
+    "meaning": "review: tomorrow",
+    "exampleKo": "내일 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "내일 문장",
+    "meaning": "sentence with tomorrow",
+    "exampleKo": "이 문장에서 내일를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "내일 질문",
+    "meaning": "question about tomorrow",
+    "exampleKo": "내일에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "어제",
+    "meaning": "yesterday",
+    "exampleKo": "어제를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "어제 연습",
+    "meaning": "practice: yesterday",
+    "exampleKo": "어제 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "어제 복습",
+    "meaning": "review: yesterday",
+    "exampleKo": "어제 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "어제 문장",
+    "meaning": "sentence with yesterday",
+    "exampleKo": "이 문장에서 어제를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "어제 질문",
+    "meaning": "question about yesterday",
+    "exampleKo": "어제에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "지금",
+    "meaning": "now",
+    "exampleKo": "지금를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "지금 연습",
+    "meaning": "practice: now",
+    "exampleKo": "지금 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "지금 복습",
+    "meaning": "review: now",
+    "exampleKo": "지금 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "지금 문장",
+    "meaning": "sentence with now",
+    "exampleKo": "이 문장에서 지금를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "지금 질문",
+    "meaning": "question about now",
+    "exampleKo": "지금에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "아침",
+    "meaning": "morning",
+    "exampleKo": "아침를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "아침 연습",
+    "meaning": "practice: morning",
+    "exampleKo": "아침 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "아침 복습",
+    "meaning": "review: morning",
+    "exampleKo": "아침 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "아침 문장",
+    "meaning": "sentence with morning",
+    "exampleKo": "이 문장에서 아침를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "아침 질문",
+    "meaning": "question about morning",
+    "exampleKo": "아침에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "점심",
+    "meaning": "lunch",
+    "exampleKo": "점심를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "점심 연습",
+    "meaning": "practice: lunch",
+    "exampleKo": "점심 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "점심 복습",
+    "meaning": "review: lunch",
+    "exampleKo": "점심 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "점심 문장",
+    "meaning": "sentence with lunch",
+    "exampleKo": "이 문장에서 점심를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "점심 질문",
+    "meaning": "question about lunch",
+    "exampleKo": "점심에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "저녁",
+    "meaning": "dinner",
+    "exampleKo": "저녁를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "저녁 연습",
+    "meaning": "practice: dinner",
+    "exampleKo": "저녁 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "저녁 복습",
+    "meaning": "review: dinner",
+    "exampleKo": "저녁 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "저녁 문장",
+    "meaning": "sentence with dinner",
+    "exampleKo": "이 문장에서 저녁를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "저녁 질문",
+    "meaning": "question about dinner",
+    "exampleKo": "저녁에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "밤",
+    "meaning": "night",
+    "exampleKo": "밤를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "밤 연습",
+    "meaning": "practice: night",
+    "exampleKo": "밤 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "밤 복습",
+    "meaning": "review: night",
+    "exampleKo": "밤 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "밤 문장",
+    "meaning": "sentence with night",
+    "exampleKo": "이 문장에서 밤를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "밤 질문",
+    "meaning": "question about night",
+    "exampleKo": "밤에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "월요일",
+    "meaning": "Monday",
+    "exampleKo": "월요일를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "월요일 연습",
+    "meaning": "practice: Monday",
+    "exampleKo": "월요일 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "월요일 복습",
+    "meaning": "review: Monday",
+    "exampleKo": "월요일 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "월요일 문장",
+    "meaning": "sentence with Monday",
+    "exampleKo": "이 문장에서 월요일를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "월요일 질문",
+    "meaning": "question about Monday",
+    "exampleKo": "월요일에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "화요일",
+    "meaning": "Tuesday",
+    "exampleKo": "화요일를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "화요일 연습",
+    "meaning": "practice: Tuesday",
+    "exampleKo": "화요일 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "화요일 복습",
+    "meaning": "review: Tuesday",
+    "exampleKo": "화요일 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "화요일 문장",
+    "meaning": "sentence with Tuesday",
+    "exampleKo": "이 문장에서 화요일를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "화요일 질문",
+    "meaning": "question about Tuesday",
+    "exampleKo": "화요일에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "수요일",
+    "meaning": "Wednesday",
+    "exampleKo": "수요일를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "수요일 연습",
+    "meaning": "practice: Wednesday",
+    "exampleKo": "수요일 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "수요일 복습",
+    "meaning": "review: Wednesday",
+    "exampleKo": "수요일 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "수요일 문장",
+    "meaning": "sentence with Wednesday",
+    "exampleKo": "이 문장에서 수요일를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "수요일 질문",
+    "meaning": "question about Wednesday",
+    "exampleKo": "수요일에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "목요일",
+    "meaning": "Thursday",
+    "exampleKo": "목요일를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "목요일 연습",
+    "meaning": "practice: Thursday",
+    "exampleKo": "목요일 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "목요일 복습",
+    "meaning": "review: Thursday",
+    "exampleKo": "목요일 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "목요일 문장",
+    "meaning": "sentence with Thursday",
+    "exampleKo": "이 문장에서 목요일를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "목요일 질문",
+    "meaning": "question about Thursday",
+    "exampleKo": "목요일에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "금요일",
+    "meaning": "Friday",
+    "exampleKo": "금요일를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "금요일 연습",
+    "meaning": "practice: Friday",
+    "exampleKo": "금요일 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "금요일 복습",
+    "meaning": "review: Friday",
+    "exampleKo": "금요일 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "금요일 문장",
+    "meaning": "sentence with Friday",
+    "exampleKo": "이 문장에서 금요일를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "금요일 질문",
+    "meaning": "question about Friday",
+    "exampleKo": "금요일에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "토요일",
+    "meaning": "Saturday",
+    "exampleKo": "토요일를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "토요일 연습",
+    "meaning": "practice: Saturday",
+    "exampleKo": "토요일 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "토요일 복습",
+    "meaning": "review: Saturday",
+    "exampleKo": "토요일 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "토요일 문장",
+    "meaning": "sentence with Saturday",
+    "exampleKo": "이 문장에서 토요일를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "토요일 질문",
+    "meaning": "question about Saturday",
+    "exampleKo": "토요일에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "일요일",
+    "meaning": "Sunday",
+    "exampleKo": "일요일를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "일요일 연습",
+    "meaning": "practice: Sunday",
+    "exampleKo": "일요일 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "일요일 복습",
+    "meaning": "review: Sunday",
+    "exampleKo": "일요일 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "일요일 문장",
+    "meaning": "sentence with Sunday",
+    "exampleKo": "이 문장에서 일요일를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "일요일 질문",
+    "meaning": "question about Sunday",
+    "exampleKo": "일요일에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "봄",
+    "meaning": "spring",
+    "exampleKo": "봄를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "봄 연습",
+    "meaning": "practice: spring",
+    "exampleKo": "봄 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "봄 복습",
+    "meaning": "review: spring",
+    "exampleKo": "봄 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "봄 문장",
+    "meaning": "sentence with spring",
+    "exampleKo": "이 문장에서 봄를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "봄 질문",
+    "meaning": "question about spring",
+    "exampleKo": "봄에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "여름",
+    "meaning": "summer",
+    "exampleKo": "여름를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "여름 연습",
+    "meaning": "practice: summer",
+    "exampleKo": "여름 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "여름 복습",
+    "meaning": "review: summer",
+    "exampleKo": "여름 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "여름 문장",
+    "meaning": "sentence with summer",
+    "exampleKo": "이 문장에서 여름를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "여름 질문",
+    "meaning": "question about summer",
+    "exampleKo": "여름에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "가을",
+    "meaning": "autumn",
+    "exampleKo": "가을를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "가을 연습",
+    "meaning": "practice: autumn",
+    "exampleKo": "가을 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "가을 복습",
+    "meaning": "review: autumn",
+    "exampleKo": "가을 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "가을 문장",
+    "meaning": "sentence with autumn",
+    "exampleKo": "이 문장에서 가을를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "가을 질문",
+    "meaning": "question about autumn",
+    "exampleKo": "가을에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "겨울",
+    "meaning": "winter",
+    "exampleKo": "겨울를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "겨울 연습",
+    "meaning": "practice: winter",
+    "exampleKo": "겨울 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "겨울 복습",
+    "meaning": "review: winter",
+    "exampleKo": "겨울 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "겨울 문장",
+    "meaning": "sentence with winter",
+    "exampleKo": "이 문장에서 겨울를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "겨울 질문",
+    "meaning": "question about winter",
+    "exampleKo": "겨울에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "날씨",
+    "meaning": "weather",
+    "exampleKo": "날씨를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "날씨 연습",
+    "meaning": "practice: weather",
+    "exampleKo": "날씨 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "날씨 복습",
+    "meaning": "review: weather",
+    "exampleKo": "날씨 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "날씨 문장",
+    "meaning": "sentence with weather",
+    "exampleKo": "이 문장에서 날씨를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "날씨 질문",
+    "meaning": "question about weather",
+    "exampleKo": "날씨에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "비",
+    "meaning": "rain",
+    "exampleKo": "비를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "비 연습",
+    "meaning": "practice: rain",
+    "exampleKo": "비 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "비 복습",
+    "meaning": "review: rain",
+    "exampleKo": "비 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "비 문장",
+    "meaning": "sentence with rain",
+    "exampleKo": "이 문장에서 비를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "비 질문",
+    "meaning": "question about rain",
+    "exampleKo": "비에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "눈",
+    "meaning": "snow",
+    "exampleKo": "눈를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "눈 연습",
+    "meaning": "practice: snow",
+    "exampleKo": "눈 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "눈 복습",
+    "meaning": "review: snow",
+    "exampleKo": "눈 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "눈 문장",
+    "meaning": "sentence with snow",
+    "exampleKo": "이 문장에서 눈를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "눈 질문",
+    "meaning": "question about snow",
+    "exampleKo": "눈에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "바람",
+    "meaning": "wind",
+    "exampleKo": "바람를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "바람 연습",
+    "meaning": "practice: wind",
+    "exampleKo": "바람 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "바람 복습",
+    "meaning": "review: wind",
+    "exampleKo": "바람 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "바람 문장",
+    "meaning": "sentence with wind",
+    "exampleKo": "이 문장에서 바람를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "바람 질문",
+    "meaning": "question about wind",
+    "exampleKo": "바람에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "덥다",
+    "meaning": "to be hot (weather)",
+    "exampleKo": "덥다를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "덥다 연습",
+    "meaning": "practice: to be hot (weather)",
+    "exampleKo": "덥다 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "덥다 복습",
+    "meaning": "review: to be hot (weather)",
+    "exampleKo": "덥다 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "덥다 문장",
+    "meaning": "sentence with to be hot (weather)",
+    "exampleKo": "이 문장에서 덥다를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "덥다 질문",
+    "meaning": "question about to be hot (weather)",
+    "exampleKo": "덥다에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "춥다",
+    "meaning": "to be cold (weather)",
+    "exampleKo": "춥다를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "춥다 연습",
+    "meaning": "practice: to be cold (weather)",
+    "exampleKo": "춥다 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "춥다 복습",
+    "meaning": "review: to be cold (weather)",
+    "exampleKo": "춥다 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "춥다 문장",
+    "meaning": "sentence with to be cold (weather)",
+    "exampleKo": "이 문장에서 춥다를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "춥다 질문",
+    "meaning": "question about to be cold (weather)",
+    "exampleKo": "춥다에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "좋다",
+    "meaning": "to be good",
+    "exampleKo": "좋다를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "좋다 연습",
+    "meaning": "practice: to be good",
+    "exampleKo": "좋다 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "좋다 복습",
+    "meaning": "review: to be good",
+    "exampleKo": "좋다 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "좋다 문장",
+    "meaning": "sentence with to be good",
+    "exampleKo": "이 문장에서 좋다를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "좋다 질문",
+    "meaning": "question about to be good",
+    "exampleKo": "좋다에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "나쁘다",
+    "meaning": "to be bad",
+    "exampleKo": "나쁘다를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "나쁘다 연습",
+    "meaning": "practice: to be bad",
+    "exampleKo": "나쁘다 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "나쁘다 복습",
+    "meaning": "review: to be bad",
+    "exampleKo": "나쁘다 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "나쁘다 문장",
+    "meaning": "sentence with to be bad",
+    "exampleKo": "이 문장에서 나쁘다를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "나쁘다 질문",
+    "meaning": "question about to be bad",
+    "exampleKo": "나쁘다에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "크다",
+    "meaning": "to be big",
+    "exampleKo": "크다를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "크다 연습",
+    "meaning": "practice: to be big",
+    "exampleKo": "크다 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "크다 복습",
+    "meaning": "review: to be big",
+    "exampleKo": "크다 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "크다 문장",
+    "meaning": "sentence with to be big",
+    "exampleKo": "이 문장에서 크다를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "크다 질문",
+    "meaning": "question about to be big",
+    "exampleKo": "크다에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "작다",
+    "meaning": "to be small",
+    "exampleKo": "작다를 자주 사용합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "작다 연습",
+    "meaning": "practice: to be small",
+    "exampleKo": "작다 연습을 매일 합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "작다 복습",
+    "meaning": "review: to be small",
+    "exampleKo": "작다 복습이 필요합니다.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "작다 문장",
+    "meaning": "sentence with to be small",
+    "exampleKo": "이 문장에서 작다를 확인하세요.",
+    "source": "starter_deck"
+  },
+  {
+    "surface": "작다 질문",
+    "meaning": "question about to be small",
+    "exampleKo": "작다에 대한 질문을 만듭니다.",
+    "source": "starter_deck"
+  }
+]

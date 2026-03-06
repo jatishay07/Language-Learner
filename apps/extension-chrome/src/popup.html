@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Korean Immersion</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Korean Immersion</h1>
+      <label class="toggle-row">
+        <span>Immersion Overlay</span>
+        <input id="immersionToggle" type="checkbox" />
+      </label>
+      <button id="refreshStatus">Refresh Daily Status</button>
+      <section id="status">Loading...</section>
+      <p class="hint">Select text on any page to view meaning and save to your vocab queue.</p>
+    </main>
+    <script src="./popup.js" type="module"></script>
+  </body>
+</html>
