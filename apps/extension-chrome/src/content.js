@@ -123,6 +123,7 @@ async function saveText(payload) {
 
 function showPopup({ text, meaning, exampleKo, x, y }) {
   clearPopup();
+  const initialMeaning = meaning || '';
 
   const popup = document.createElement('div');
   popup.className = 'korean-immersion-popup';
@@ -140,7 +141,7 @@ function showPopup({ text, meaning, exampleKo, x, y }) {
   popup.innerHTML = `
     <div style="font-weight:bold; margin-bottom:6px;">${text}</div>
     <div style="font-size:12px; margin-bottom:6px;">Meaning (English)</div>
-    <input id="korean-meaning-input" value="${(meaning || 'Add English meaning note').replace(/"/g, '&quot;')}" style="width:100%; margin-bottom:8px;" />
+    <input id="korean-meaning-input" placeholder="English meaning" value="${(initialMeaning || '').replace(/"/g, '&quot;')}" style="width:100%; margin-bottom:8px;" />
     <div style="font-size:12px; margin-bottom:6px; color:#334;">${exampleKo || 'No example stored yet.'}</div>
     <button id="korean-save-btn" style="width:100%; background:#2f6f4f; color:#fff; border:none; border-radius:6px; padding:6px; cursor:pointer;">Save to Vocabulary</button>
     <button id="korean-close-btn" style="width:100%; margin-top:6px; border:1px solid #999; border-radius:6px; padding:6px; background:white; cursor:pointer;">Close</button>
@@ -167,6 +168,34 @@ function showPopup({ text, meaning, exampleKo, x, y }) {
   popupElement = popup;
 }
 
+async function resolveEnglishMeaning(selectedText, lookupMeaning) {
+  const candidate = String(lookupMeaning || '').trim();
+  if (candidate && !containsHangul(candidate)) {
+    return candidate;
+  }
+
+  const sourceText = candidate || selectedText;
+  if (!sourceText) {
+    return '';
+  }
+
+  const english = await translateToEnglish(sourceText);
+  const translated = String(english.englishText || '').trim();
+  if (!translated) {
+    return candidate;
+  }
+
+  if (containsHangul(translated) && sourceText !== selectedText) {
+    const retry = await translateToEnglish(selectedText);
+    const retryText = String(retry.englishText || '').trim();
+    if (retryText && !containsHangul(retryText)) {
+      return retryText;
+    }
+  }
+
+  return translated;
+}
+
 async function handleSelection(event) {
   const selectedText = String(window.getSelection()?.toString() || '').trim();
   if (!selectedText || selectedText.length < 1) {
@@ -175,13 +204,12 @@ async function handleSelection(event) {
 
   try {
     const lookup = await lookupText(selectedText);
-    let englishMeaning = (lookup.meaning || '').trim();
-
-    if (!englishMeaning || containsHangul(englishMeaning)) {
-      const english = await translateToEnglish(englishMeaning || selectedText);
-      englishMeaning = (english.englishText || '').trim() || englishMeaning;
+    let englishMeaning = '';
+    try {
+      englishMeaning = await resolveEnglishMeaning(selectedText, lookup.meaning || '');
+    } catch {
+      englishMeaning = String(lookup.meaning || '').trim();
     }
-
     showPopup({
       text: selectedText,
       meaning: englishMeaning,
@@ -194,7 +222,7 @@ async function handleSelection(event) {
       const english = await translateToEnglish(selectedText);
       showPopup({
         text: selectedText,
-        meaning: (english.englishText || '').trim(),
+        meaning: String(english.englishText || '').trim(),
         exampleKo: '',
         x: event.clientX,
         y: event.clientY

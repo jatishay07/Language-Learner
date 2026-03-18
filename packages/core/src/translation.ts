@@ -153,6 +153,49 @@ async function requestOpenAiEnglishGloss(text: string): Promise<OpenAiEnglishOut
   return safeParseEnglishJson(content);
 }
 
+async function requestPublicEnglishGloss(text: string): Promise<OpenAiEnglishOutput | null> {
+  try {
+    const url = new URL('https://translate.googleapis.com/translate_a/single');
+    url.searchParams.set('client', 'gtx');
+    url.searchParams.set('sl', 'ko');
+    url.searchParams.set('tl', 'en');
+    url.searchParams.set('dt', 't');
+    url.searchParams.set('q', text);
+
+    const response = await fetch(url, {
+      method: 'GET'
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const payload = (await response.json()) as unknown;
+    if (!Array.isArray(payload) || !Array.isArray(payload[0])) {
+      return null;
+    }
+
+    const segments = payload[0] as unknown[];
+    const translated = segments
+      .map((segment) => (Array.isArray(segment) ? segment[0] : ''))
+      .map((part) => String(part || '').trim())
+      .filter(Boolean)
+      .join(' ')
+      .trim();
+
+    if (!translated) {
+      return null;
+    }
+
+    return {
+      englishText: translated,
+      confidence: 0.7
+    };
+  } catch {
+    return null;
+  }
+}
+
 function containsHangul(text: string): boolean {
   return /[\u3131-\u318e\uac00-\ud7a3]/.test(text);
 }
@@ -236,6 +279,15 @@ export async function glossToEnglish(text: string): Promise<EnglishGlossResult> 
       englishText: ai.englishText,
       confidence: Math.max(0, Math.min(1, ai.confidence)),
       source: 'openai_fallback'
+    };
+  }
+
+  const publicFallback = await requestPublicEnglishGloss(trimmed);
+  if (publicFallback) {
+    return {
+      englishText: publicFallback.englishText,
+      confidence: publicFallback.confidence,
+      source: 'public_fallback'
     };
   }
 

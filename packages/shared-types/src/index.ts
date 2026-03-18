@@ -45,7 +45,7 @@ export const TranslationResultSchema = z.object({
 });
 export type TranslationResult = z.infer<typeof TranslationResultSchema>;
 
-export const EnglishGlossSourceSchema = z.enum(['local_gloss', 'openai_fallback', 'identity']);
+export const EnglishGlossSourceSchema = z.enum(['local_gloss', 'openai_fallback', 'public_fallback', 'identity']);
 
 export const EnglishGlossResultSchema = z.object({
   englishText: z.string(),

@@ -8,6 +8,8 @@
     "learner:start": "tsx apps/cli/src/index.ts start",
     "learner:status": "tsx apps/cli/src/index.ts status",
     "learner:daemon": "tsx apps/daemon/src/index.ts",
+    "learner:shortcuts:install": "tsx scripts/install-shortcuts.ts",
+    "learner:autostart:chrome:install": "tsx scripts/install-chrome-autostart.ts",
     "learner:reminders:install": "tsx scripts/install-reminders.ts",
     "learner:export": "tsx apps/cli/src/index.ts export",
     "learner:docs:sync": "tsx apps/cli/src/index.ts docs:sync",
