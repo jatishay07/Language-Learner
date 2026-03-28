@@ -82,6 +82,14 @@ if [[ ! -f "$RUNTIME_ROOT/data/seed/ko/starter_deck.json" ]]; then
   cp "$REPO_ROOT/data/seed/ko/starter_deck.json" "$RUNTIME_ROOT/data/seed/ko/starter_deck.json"
 fi
 
+# Load .env from repo root if present
+if [[ -f "$REPO_ROOT/.env" ]]; then
+  set -o allexport
+  # shellcheck disable=SC1090
+  source "$REPO_ROOT/.env"
+  set +o allexport
+fi
+
 # Start daemon fresh
 export LEARNER_ROOT="$RUNTIME_ROOT"
 cd "$REPO_ROOT"
