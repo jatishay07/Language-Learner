@@ -2,6 +2,7 @@ const DAEMON_BASE = 'http://127.0.0.1:4317';
 const originalTextMap = new Map();
 let immersionEnabled = true;
 let popupElement = null;
+let suppressSelectionUntil = 0;
 
 function isEligibleTextNode(node) {
   if (!node || !node.nodeValue) return false;
@@ -82,6 +83,18 @@ function clearPopup() {
   }
 }
 
+function clearSelection() {
+  const selection = window.getSelection();
+  if (!selection) {
+    return;
+  }
+  try {
+    selection.removeAllRanges();
+  } catch {
+    // no-op
+  }
+}
+
 async function lookupText(text) {
   const query = encodeURIComponent(text);
   const response = await fetch(`${DAEMON_BASE}/v1/vocab/lookup?text=${query}`);
@@ -147,7 +160,21 @@ function showPopup({ text, meaning, exampleKo, x, y }) {
     <button id="korean-close-btn" style="width:100%; margin-top:6px; border:1px solid #999; border-radius:6px; padding:6px; background:white; cursor:pointer;">Close</button>
   `;
 
-  popup.querySelector('#korean-close-btn').addEventListener('click', clearPopup);
+  popup.addEventListener('mousedown', (event) => {
+    event.stopPropagation();
+  });
+
+  popup.addEventListener('mouseup', (event) => {
+    event.stopPropagation();
+  });
+
+  popup.querySelector('#korean-close-btn').addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    suppressSelectionUntil = Date.now() + 600;
+    clearSelection();
+    clearPopup();
+  });
   popup.querySelector('#korean-save-btn').addEventListener('click', async () => {
     const meaningInput = popup.querySelector('#korean-meaning-input');
     const meaningValue = meaningInput.value.trim() || 'Captured meaning';
@@ -197,6 +224,14 @@ async function resolveEnglishMeaning(selectedText, lookupMeaning) {
 }
 
 async function handleSelection(event) {
+  if (Date.now() < suppressSelectionUntil) {
+    return;
+  }
+
+  if (popupElement && popupElement.contains(event.target)) {
+    return;
+  }
+
   const selectedText = String(window.getSelection()?.toString() || '').trim();
   if (!selectedText || selectedText.length < 1) {
     return;

@@ -54,6 +54,7 @@ pnpm learner:autostart:chrome:install
 This installs a `launchd` bridge that:
 - Starts the local daemon when Google Chrome is running.
 - Stops the daemon when Chrome is closed.
+- Uses runtime data at `~/Library/Application Support/LanguageLearner/runtime`.
 
 ## Chrome Extension (Local)
 1. Start daemon: `pnpm learner:daemon`

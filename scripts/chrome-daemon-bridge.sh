@@ -2,16 +2,18 @@
 set -euo pipefail
 
 ROOT_DIR="${1:-}"
-if [[ -z "$ROOT_DIR" ]]; then
-  echo "Usage: chrome-daemon-bridge.sh <repo-root>" >&2
+RUNTIME_DIR="${2:-}"
+NODE_BIN="${3:-}"
+if [[ -z "$ROOT_DIR" || -z "$RUNTIME_DIR" || -z "$NODE_BIN" ]]; then
+  echo "Usage: chrome-daemon-bridge.sh <repo-root> <runtime-root> <node-bin>" >&2
   exit 1
 fi
 
-PID_FILE="$ROOT_DIR/data/chrome-daemon.pid"
-OUT_LOG="$ROOT_DIR/data/chrome-daemon.out.log"
-ERR_LOG="$ROOT_DIR/data/chrome-daemon.err.log"
+PID_FILE="$RUNTIME_DIR/chrome-daemon.pid"
+OUT_LOG="$RUNTIME_DIR/chrome-daemon.out.log"
+ERR_LOG="$RUNTIME_DIR/chrome-daemon.err.log"
 
-mkdir -p "$ROOT_DIR/data"
+mkdir -p "$RUNTIME_DIR/data/seed/ko"
 
 is_chrome_running() {
   pgrep -x "Google Chrome" >/dev/null 2>&1
@@ -21,14 +23,30 @@ is_daemon_running() {
   lsof -nP -iTCP:4317 -sTCP:LISTEN >/dev/null 2>&1
 }
 
+resolve_node_command() {
+  if [[ -x "$NODE_BIN" ]]; then
+    echo "$NODE_BIN"
+    return
+  fi
+
+  echo ""
+}
+
 start_daemon() {
   if is_daemon_running; then
     return
   fi
 
+  local node_cmd
+  node_cmd="$(resolve_node_command)"
+  if [[ -z "$node_cmd" ]]; then
+    echo "Configured node binary not found; cannot start daemon." >>"$ERR_LOG"
+    return
+  fi
+
   (
     cd "$ROOT_DIR"
-    nohup pnpm run learner:daemon >>"$OUT_LOG" 2>>"$ERR_LOG" &
+    nohup env LEARNER_ROOT="$RUNTIME_DIR" "$node_cmd" --import tsx apps/daemon/src/index.ts >>"$OUT_LOG" 2>>"$ERR_LOG" &
     echo $! > "$PID_FILE"
   )
 }

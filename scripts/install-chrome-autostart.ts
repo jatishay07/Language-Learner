@@ -4,11 +4,12 @@ import path from 'node:path';
 import { execSync } from 'node:child_process';
 
 const LABEL = 'com.languagelearner.chrome-daemon-bridge';
+const APP_SUPPORT_DIR = path.join(os.homedir(), 'Library', 'Application Support', 'LanguageLearner');
+const RUNTIME_DIR = path.join(APP_SUPPORT_DIR, 'runtime');
 
-function renderPlist(repoRoot: string): string {
-  const bridgeScript = path.join(repoRoot, 'scripts', 'chrome-daemon-bridge.sh');
-  const outLog = path.join(repoRoot, 'data', 'chrome-bridge-launchd.out.log');
-  const errLog = path.join(repoRoot, 'data', 'chrome-bridge-launchd.err.log');
+function renderPlist(repoRoot: string, runtimeBridgeScript: string, nodeBin: string): string {
+  const outLog = path.join(RUNTIME_DIR, 'chrome-bridge-launchd.out.log');
+  const errLog = path.join(RUNTIME_DIR, 'chrome-bridge-launchd.err.log');
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -18,10 +19,13 @@ function renderPlist(repoRoot: string): string {
   <string>${LABEL}</string>
   <key>ProgramArguments</key>
   <array>
-    <string>/bin/zsh</string>
-    <string>${bridgeScript}</string>
+    <string>${runtimeBridgeScript}</string>
     <string>${repoRoot}</string>
+    <string>${RUNTIME_DIR}</string>
+    <string>${nodeBin}</string>
   </array>
+  <key>WorkingDirectory</key>
+  <string>${APP_SUPPORT_DIR}</string>
   <key>RunAtLoad</key>
   <true/>
   <key>KeepAlive</key>
@@ -36,12 +40,25 @@ function renderPlist(repoRoot: string): string {
 }
 
 function installChromeAutostart(repoRoot: string): string {
+  const nodeBin = process.execPath;
+  fs.mkdirSync(APP_SUPPORT_DIR, { recursive: true });
+  fs.mkdirSync(RUNTIME_DIR, { recursive: true });
+  fs.mkdirSync(path.join(RUNTIME_DIR, 'data', 'seed', 'ko'), { recursive: true });
+
+  const sourceSeed = path.join(repoRoot, 'data', 'seed', 'ko', 'starter_deck.json');
+  const runtimeSeed = path.join(RUNTIME_DIR, 'data', 'seed', 'ko', 'starter_deck.json');
+  fs.copyFileSync(sourceSeed, runtimeSeed);
+
+  const sourceBridgeScript = path.join(repoRoot, 'scripts', 'chrome-daemon-bridge.sh');
+  const runtimeBridgeScript = path.join(APP_SUPPORT_DIR, 'chrome-daemon-bridge.sh');
+  fs.copyFileSync(sourceBridgeScript, runtimeBridgeScript);
+  fs.chmodSync(runtimeBridgeScript, 0o755);
+
   const launchAgentsDir = path.join(os.homedir(), 'Library', 'LaunchAgents');
   fs.mkdirSync(launchAgentsDir, { recursive: true });
-  fs.mkdirSync(path.join(repoRoot, 'data'), { recursive: true });
 
   const plistPath = path.join(launchAgentsDir, `${LABEL}.plist`);
-  fs.writeFileSync(plistPath, renderPlist(repoRoot), 'utf8');
+  fs.writeFileSync(plistPath, renderPlist(repoRoot, runtimeBridgeScript, nodeBin), 'utf8');
 
   try {
     execSync(`launchctl unload ${plistPath}`, { stdio: 'ignore' });

@@ -295,6 +295,23 @@ export class LearnerEngine implements TranslationStore {
     };
   }
 
+  recordChatActivity(sessionId: string, activeSeconds: number): DayStatus {
+    this.assertSessionExists(sessionId);
+    const clamped = clampNumber(activeSeconds, 5, 120);
+    const now = nowIso();
+    const session = this.db
+      .prepare('SELECT date FROM sessions WHERE id = ?')
+      .get(sessionId) as { date: string };
+    const tx = this.db.transaction(() => {
+      this.db.prepare('UPDATE sessions SET active_seconds = active_seconds + ? WHERE id = ?').run(clamped, sessionId);
+      this.db
+        .prepare('UPDATE days SET completed_seconds = completed_seconds + ?, updated_at = ? WHERE date = ?')
+        .run(clamped, now, session.date);
+    });
+    tx();
+    return this.getTodayStatus();
+  }
+
   saveVocab(input: SaveVocabInput): VocabItem {
     const normalizedSurface = input.text.trim();
     const now = nowIso();
