@@ -61,7 +61,7 @@ function installHangulScript(repoRoot: string): string {
 
   const script = `#!/usr/bin/env bash
 # Launched by typing (hangul) in the terminal.
-# Starts the Korean tutor daemon (if not running) then opens the browser UI.
+# Always restarts the daemon so the latest code is used, then opens the browser.
 set -euo pipefail
 
 DAEMON_PORT=4317
@@ -69,24 +69,32 @@ RUNTIME_ROOT="${runtimeRoot}"
 REPO_ROOT="${repoRoot}"
 NODE_BIN="${nodeBin}"
 
-# Start daemon if not already listening on port
-if ! lsof -nP -iTCP:\${DAEMON_PORT} -sTCP:LISTEN >/dev/null 2>&1; then
-  mkdir -p "$RUNTIME_ROOT/data/seed/ko"
-  if [[ ! -f "$RUNTIME_ROOT/data/seed/ko/starter_deck.json" ]]; then
-    cp "$REPO_ROOT/data/seed/ko/starter_deck.json" "$RUNTIME_ROOT/data/seed/ko/starter_deck.json"
-  fi
-  export LEARNER_ROOT="$RUNTIME_ROOT"
-  cd "$REPO_ROOT"
-  nohup "$NODE_BIN" --import tsx apps/daemon/src/index.ts \\
-    > "$RUNTIME_ROOT/daemon.log" 2>&1 &
-  echo "⏳  Starting Korean tutor daemon…"
-  for i in 1 2 3 4 5; do
-    sleep 1
-    lsof -nP -iTCP:\${DAEMON_PORT} -sTCP:LISTEN >/dev/null 2>&1 && break
-  done
+# Kill any existing process on the daemon port (ensures fresh code on every launch)
+EXISTING_PID=$(lsof -nP -iTCP:\${DAEMON_PORT} -sTCP:LISTEN 2>/dev/null | awk 'NR>1 {print $2}' | head -1)
+if [[ -n "\${EXISTING_PID:-}" ]]; then
+  kill "\$EXISTING_PID" 2>/dev/null || true
+  sleep 1
 fi
 
-echo "🇰🇷  Opening Korean tutor at http://127.0.0.1:\${DAEMON_PORT}"
+# Seed data
+mkdir -p "$RUNTIME_ROOT/data/seed/ko"
+if [[ ! -f "$RUNTIME_ROOT/data/seed/ko/starter_deck.json" ]]; then
+  cp "$REPO_ROOT/data/seed/ko/starter_deck.json" "$RUNTIME_ROOT/data/seed/ko/starter_deck.json"
+fi
+
+# Start daemon fresh
+export LEARNER_ROOT="$RUNTIME_ROOT"
+cd "$REPO_ROOT"
+nohup "$NODE_BIN" --import tsx apps/daemon/src/index.ts \\
+  > "$RUNTIME_ROOT/daemon.log" 2>&1 &
+
+echo "⏳  Starting Korean tutor…"
+for i in 1 2 3 4 5; do
+  sleep 1
+  lsof -nP -iTCP:\${DAEMON_PORT} -sTCP:LISTEN >/dev/null 2>&1 && break
+done
+
+echo "🇰🇷  Opening http://127.0.0.1:\${DAEMON_PORT}"
 open "http://127.0.0.1:\${DAEMON_PORT}"
 `;
 
