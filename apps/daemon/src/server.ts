@@ -78,7 +78,7 @@ export function createDaemonServer(options?: DaemonServerOptions) {
     }
   });
 
-  // ── Chat endpoint (OpenAI proxy) ─────────────────────────────────────────────
+  // ── Chat endpoint (Anthropic proxy) ──────────────────────────────────────────
 
   fastify.post('/v1/chat', async (request, reply) => {
     const { messages, romanizationLevel = 100 } = request.body as {
@@ -86,43 +86,41 @@ export function createDaemonServer(options?: DaemonServerOptions) {
       romanizationLevel?: number;
     };
 
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
       reply.status(500);
-      return { error: 'OPENAI_API_KEY environment variable is not set.' };
+      return { error: 'ANTHROPIC_API_KEY environment variable is not set. Run: export ANTHROPIC_API_KEY=sk-ant-...' };
     }
 
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: buildTutorSystemPrompt(romanizationLevel) },
-          ...messages
-        ],
+        model: 'claude-sonnet-4-20250514',
         max_tokens: 600,
-        response_format: { type: 'json_object' }
+        system: buildTutorSystemPrompt(romanizationLevel),
+        messages
       })
     });
 
     if (!res.ok) {
       const err = await res.text();
       reply.status(502);
-      return { error: `OpenAI error ${res.status}: ${err}` };
+      return { error: `Anthropic error ${res.status}: ${err}` };
     }
 
-    const data = await res.json() as { choices: Array<{ message: { content: string } }> };
-    const content = data.choices[0]?.message?.content ?? '{}';
+    const data = await res.json() as { content: Array<{ type: string; text: string }> };
+    const raw = data.content.find(b => b.type === 'text')?.text ?? '{}';
 
     try {
-      return JSON.parse(content);
+      return JSON.parse(raw);
     } catch {
       return {
-        tutorMessage: content || '죄송해요, 다시 말씀해 주세요.',
+        tutorMessage: raw || '죄송해요, 다시 말씀해 주세요.',
         romanization: '',
         feedbackNote: '',
         vocabWord: null,
