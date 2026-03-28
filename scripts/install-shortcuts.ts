@@ -6,8 +6,6 @@ const PATH_BLOCK_START = '# >>> language-learner path >>>';
 const PATH_BLOCK_END = '# <<< language-learner path <<<';
 const FUNCTION_BLOCK_START = '# >>> language-learner function >>>';
 const FUNCTION_BLOCK_END = '# <<< language-learner function <<<';
-const HANGUL_BLOCK_START = '# >>> language-learner hangul-hook >>>';
-const HANGUL_BLOCK_END = '# <<< language-learner hangul-hook <<<';
 
 function upsertBlock(content: string, startMarker: string, endMarker: string, blockBody: string): string {
   const block = `${startMarker}\n${blockBody}\n${endMarker}`;
@@ -53,6 +51,50 @@ exec "${nodeBin}" --import tsx apps/cli/src/index.ts start "$@"
   return target;
 }
 
+function installHangulScript(repoRoot: string): string {
+  const binDir = path.join(os.homedir(), '.local', 'bin');
+  fs.mkdirSync(binDir, { recursive: true });
+
+  const target = path.join(binDir, 'hangul');
+  const runtimeRoot = path.join(os.homedir(), 'Library', 'Application Support', 'LanguageLearner', 'runtime');
+  const nodeBin = process.execPath;
+
+  const script = `#!/usr/bin/env bash
+# Launched by typing (hangul) in the terminal.
+# Starts the Korean tutor daemon (if not running) then opens the browser UI.
+set -euo pipefail
+
+DAEMON_PORT=4317
+RUNTIME_ROOT="${runtimeRoot}"
+REPO_ROOT="${repoRoot}"
+NODE_BIN="${nodeBin}"
+
+# Start daemon if not already listening on port
+if ! lsof -nP -iTCP:\${DAEMON_PORT} -sTCP:LISTEN >/dev/null 2>&1; then
+  mkdir -p "$RUNTIME_ROOT/data/seed/ko"
+  if [[ ! -f "$RUNTIME_ROOT/data/seed/ko/starter_deck.json" ]]; then
+    cp "$REPO_ROOT/data/seed/ko/starter_deck.json" "$RUNTIME_ROOT/data/seed/ko/starter_deck.json"
+  fi
+  export LEARNER_ROOT="$RUNTIME_ROOT"
+  cd "$REPO_ROOT"
+  nohup "$NODE_BIN" --import tsx apps/daemon/src/index.ts \\
+    > "$RUNTIME_ROOT/daemon.log" 2>&1 &
+  echo "⏳  Starting Korean tutor daemon…"
+  for i in 1 2 3 4 5; do
+    sleep 1
+    lsof -nP -iTCP:\${DAEMON_PORT} -sTCP:LISTEN >/dev/null 2>&1 && break
+  done
+fi
+
+echo "🇰🇷  Opening Korean tutor at http://127.0.0.1:\${DAEMON_PORT}"
+open "http://127.0.0.1:\${DAEMON_PORT}"
+`;
+
+  fs.writeFileSync(target, script, 'utf8');
+  ensureExecutable(target);
+  return target;
+}
+
 function updateZshRc(repoRoot: string): string {
   const zshrcPath = path.join(os.homedir(), '.zshrc');
   const existing = fs.existsSync(zshrcPath) ? fs.readFileSync(zshrcPath, 'utf8') : '';
@@ -70,36 +112,8 @@ function updateZshRc(repoRoot: string): string {
     '}'
   ].join('\n');
 
-  // Hangul command_not_found_handler: typing any Korean text and pressing Enter
-  // auto-launches the language tutor instead of showing "command not found".
-  const hangulBlock = [
-    '# Typing Hangul in the terminal launches the Korean tutor automatically.',
-    'command_not_found_handler() {',
-    '  local _cmd="$1"',
-    '  # Detect Korean Hangul syllables (U+AC00–U+D7A3) or jamo (U+1100–U+11FF, U+3130–U+318F)',
-    '  if python3 - "$_cmd" <<\'PYEOF\' 2>/dev/null',
-    'import sys',
-    's = sys.argv[1]',
-    'hangul = any(',
-    '    0xAC00 <= ord(c) <= 0xD7A3 or',
-    '    0x1100 <= ord(c) <= 0x11FF or',
-    '    0x3130 <= ord(c) <= 0x318F',
-    '    for c in s',
-    ')',
-    'sys.exit(0 if hangul else 1)',
-    'PYEOF',
-    '  then',
-    '    language-learn',
-    '    return 0',
-    '  fi',
-    '  printf "zsh: command not found: %s\\n" "$_cmd" >&2',
-    '  return 127',
-    '}'
-  ].join('\n');
-
   let next = upsertBlock(existing, PATH_BLOCK_START, PATH_BLOCK_END, pathBlock);
   next = upsertBlock(next, FUNCTION_BLOCK_START, FUNCTION_BLOCK_END, functionBlock);
-  next = upsertBlock(next, HANGUL_BLOCK_START, HANGUL_BLOCK_END, hangulBlock);
 
   fs.writeFileSync(zshrcPath, next, 'utf8');
   return zshrcPath;
@@ -107,17 +121,24 @@ function updateZshRc(repoRoot: string): string {
 
 function main(): void {
   const repoRoot = process.cwd();
-  const scriptPath = installLanguageLearnScript(repoRoot);
+  const learnScript = installLanguageLearnScript(repoRoot);
+  const hangulScript = installHangulScript(repoRoot);
   const zshrcPath = updateZshRc(repoRoot);
 
   // eslint-disable-next-line no-console
   console.log('Installed shortcuts:');
   // eslint-disable-next-line no-console
-  console.log(`- ${scriptPath}`);
+  console.log(`- ${learnScript}  (language learn → Ink terminal tutor)`);
   // eslint-disable-next-line no-console
-  console.log(`- Updated ${zshrcPath} with language learn function and PATH export`);
+  console.log(`- ${hangulScript}  (hangul / (hangul) → web UI in browser)`);
   // eslint-disable-next-line no-console
-  console.log('Open a new terminal tab or run: source ~/.zshrc');
+  console.log(`- Updated ${zshrcPath}`);
+  // eslint-disable-next-line no-console
+  console.log('');
+  // eslint-disable-next-line no-console
+  console.log('Run: source ~/.zshrc');
+  // eslint-disable-next-line no-console
+  console.log('Then type (hangul) in any terminal to open the Korean tutor.');
 }
 
 main();

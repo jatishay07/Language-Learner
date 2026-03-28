@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import {
@@ -7,6 +10,47 @@ import {
   TranslateToEnglishInputSchema
 } from '../../../packages/shared-types/src/index.js';
 import { APP_HOST, APP_PORT, LearnerEngine } from '../../../packages/core/src/index.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+function buildTutorSystemPrompt(romLevel: number): string {
+  return `You are a warm, encouraging Korean language tutor for a beginner learner.
+Goals: understand K-dramas, converse with Korean speakers, travel to Korea, read Korean webnovels.
+Current level: Beginner (knows Hangul alphabet and basic vocabulary, not yet conversational).
+Learning style: gamified, fun, challenge-based.
+
+CONVERSATION RULES:
+- Speak mostly in Korean at a beginner level. Keep sentences short and clear.
+- Gently correct errors inline (e.g. "좋아요! But actually: 저는 학생이에요").
+- Weave in K-drama, food, travel, and daily life topics.
+- Occasionally use dramatic webnovel-style phrasing for fun.
+- If user writes in English, respond in Korean with the English meaning in parentheses.
+
+ROMANIZATION: Current romanizationLevel is ${romLevel}%.
+- If level >= 40: include the "romanization" field.
+- If level < 40: set "romanization" to "".
+
+MINI-CHALLENGES: Every 5–7 messages, insert a miniChallenge to test something practiced.
+Example: { "question": "Quick! How do you say 'I want to eat ramen'? (+10 XP!)", "correctAnswer": "라면을 먹고 싶어요", "xpReward": 10 }
+Otherwise set miniChallenge to null.
+
+XP: xpDelta = 8–15 based on message effort. bonusXp = 5 for correct grammar, 5 for new vocab used, 3 for long sentence.
+streakMaintained = true if no major grammar error, false if significant mistake.
+
+RESPONSE FORMAT: Return ONLY a valid JSON object — no markdown fences, no extra text:
+{
+  "tutorMessage": "Korean text of your response",
+  "romanization": "romanization of tutorMessage (or empty string if level < 40)",
+  "feedbackNote": "one-line note with emoji (e.g. '✅ Correct subject marker!' or '💡 Use 에서 for locations')",
+  "vocabWord": { "hangul": "word", "romanization": "rom", "meaning": "English", "example": "example sentence" },
+  "xpDelta": 10,
+  "bonusXp": 0,
+  "streakMaintained": true,
+  "achievement": null,
+  "miniChallenge": null
+}
+vocabWord should be null if no word is worth highlighting this turn.`
+}
 
 export interface DaemonServerOptions {
   engine?: LearnerEngine;
@@ -19,6 +63,91 @@ export function createDaemonServer(options?: DaemonServerOptions) {
   fastify.register(cors, {
     origin: true,
     methods: ['GET', 'POST', 'OPTIONS']
+  });
+
+  // ── Web UI ──────────────────────────────────────────────────────────────────
+
+  fastify.get('/', async (request, reply) => {
+    try {
+      const html = readFileSync(join(__dirname, '../../web/index.html'), 'utf8');
+      return reply.type('text/html').send(html);
+    } catch {
+      return reply.status(404).type('text/plain').send(
+        'Web UI not found. Make sure apps/web/index.html exists and you started the daemon from the repo root.'
+      );
+    }
+  });
+
+  // ── Chat endpoint (OpenAI proxy) ─────────────────────────────────────────────
+
+  fastify.post('/v1/chat', async (request, reply) => {
+    const { messages, romanizationLevel = 100 } = request.body as {
+      messages: Array<{ role: 'user' | 'assistant'; content: string }>;
+      romanizationLevel?: number;
+    };
+
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      reply.status(500);
+      return { error: 'OPENAI_API_KEY environment variable is not set.' };
+    }
+
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: buildTutorSystemPrompt(romanizationLevel) },
+          ...messages
+        ],
+        max_tokens: 600,
+        response_format: { type: 'json_object' }
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      reply.status(502);
+      return { error: `OpenAI error ${res.status}: ${err}` };
+    }
+
+    const data = await res.json() as { choices: Array<{ message: { content: string } }> };
+    const content = data.choices[0]?.message?.content ?? '{}';
+
+    try {
+      return JSON.parse(content);
+    } catch {
+      return {
+        tutorMessage: content || '죄송해요, 다시 말씀해 주세요.',
+        romanization: '',
+        feedbackNote: '',
+        vocabWord: null,
+        xpDelta: 5,
+        bonusXp: 0,
+        streakMaintained: true,
+        achievement: null,
+        miniChallenge: null
+      };
+    }
+  });
+
+  // ── Chat activity (credits session time without needing a vocab exercise) ───
+
+  fastify.post('/v1/session/chat-activity', async (request, reply) => {
+    const { sessionId, activeSeconds } = request.body as {
+      sessionId: string;
+      activeSeconds?: number;
+    };
+    try {
+      return engine.recordChatActivity(sessionId, activeSeconds ?? 30);
+    } catch (error) {
+      reply.status(400);
+      return { error: error instanceof Error ? error.message : 'Failed to record chat activity' };
+    }
   });
 
   fastify.get('/health', async () => ({

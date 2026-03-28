@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>한국어 튜터 — Korean Tutor</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+      background: #f7f8fc;
+      color: #2d3748;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Header ─────────────────────────────────────────────────────── */
+    .header {
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .header-title { font-weight: 800; font-size: 17px; color: #ff6b6b; white-space: nowrap; }
+    .xp-section { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+    .level-label { font-size: 11px; color: #718096; white-space: nowrap; }
+    .xp-bar-track { flex: 1; height: 7px; background: #e2e8f0; border-radius: 4px; overflow: hidden; min-width: 40px; }
+    .xp-bar-fill { height: 100%; background: linear-gradient(90deg, #ff6b6b, #ff8e53); border-radius: 4px; transition: width 0.5s ease; }
+    .xp-count { font-size: 13px; font-weight: 700; color: #ff6b6b; white-space: nowrap; }
+    .streak-badge { font-size: 15px; white-space: nowrap; }
+    .rom-toggle {
+      font-size: 11px; padding: 3px 9px; border-radius: 20px;
+      background: #edf2f7; color: #4a5568; cursor: pointer;
+      border: none; white-space: nowrap; transition: background 0.15s;
+    }
+    .rom-toggle:hover { background: #e2e8f0; }
+
+    /* ── Tab bar ─────────────────────────────────────────────────────── */
+    .tabbar {
+      display: flex;
+      background: #fff;
+      border-bottom: 2px solid #e2e8f0;
+      flex-shrink: 0;
+    }
+    .tab {
+      flex: 1; padding: 11px 8px; text-align: center;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      color: #a0aec0; border-bottom: 2px solid transparent;
+      margin-bottom: -2px; transition: color 0.15s, border-color 0.15s;
+      user-select: none;
+    }
+    .tab.active { color: #ff6b6b; border-bottom-color: #ff6b6b; }
+    .tab:hover:not(.active) { color: #4a5568; background: #fafafa; }
+
+    /* ── Pane container ──────────────────────────────────────────────── */
+    .pane { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+
+    /* ── Messages ────────────────────────────────────────────────────── */
+    .messages {
+      flex: 1; overflow-y: auto; padding: 16px 20px;
+      display: flex; flex-direction: column; gap: 14px;
+      scroll-behavior: smooth;
+    }
+    .msg-row { display: flex; flex-direction: column; }
+    .msg-row.user { align-items: flex-end; }
+    .msg-row.tutor { align-items: flex-start; }
+    .bubble {
+      max-width: min(75%, 520px);
+      padding: 10px 14px;
+      border-radius: 18px;
+      font-size: 15px;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+    .tutor .bubble {
+      background: #fff;
+      border: 1px solid #e8ecf0;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .user .bubble {
+      background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+    .romanization {
+      font-size: 11.5px; color: #b0bec5; font-style: italic;
+      margin-top: 3px; padding-left: 3px;
+      transition: opacity 0.3s;
+    }
+    .romanization.faint { color: #d5dce3; }
+    .feedback-note {
+      font-size: 12px; margin-top: 5px;
+      padding: 4px 10px;
+      background: #f0fff4; border-left: 3px solid #48bb78;
+      border-radius: 0 6px 6px 0; color: #276749;
+      max-width: min(75%, 520px);
+    }
+    .vocab-chip {
+      font-size: 12px; margin-top: 4px;
+      padding: 4px 10px;
+      background: #fffaf0; border-left: 3px solid #ed8936;
+      border-radius: 0 6px 6px 0; color: #7b341e;
+      max-width: min(75%, 520px);
+    }
+    .xp-pop {
+      font-size: 11px; color: #ff8e53; font-weight: 700;
+      margin-top: 3px; padding-right: 2px;
+      animation: fadePop 0.4s ease;
+    }
+    @keyframes fadePop { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Typing dots */
+    .typing-bubble {
+      display: flex; gap: 5px; align-items: center;
+      padding: 12px 16px;
+      background: #fff; border: 1px solid #e8ecf0;
+      border-radius: 18px 18px 18px 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      width: fit-content;
+    }
+    .dot {
+      width: 7px; height: 7px; background: #cbd5e0; border-radius: 50%;
+      animation: bounce 1.3s infinite ease-in-out;
+    }
+    .dot:nth-child(2) { animation-delay: 0.18s; }
+    .dot:nth-child(3) { animation-delay: 0.36s; }
+    @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-7px)} }
+
+    /* Challenge box */
+    .challenge-box {
+      margin: 2px 0 4px;
+      padding: 10px 14px;
+      background: #fffbeb; border: 1px solid #f6e05e;
+      border-radius: 10px; font-size: 13px; color: #744210;
+    }
+
+    /* ── Input area ──────────────────────────────────────────────────── */
+    .input-area {
+      padding: 12px 20px;
+      background: #fff; border-top: 1px solid #e2e8f0;
+      display: flex; gap: 10px; flex-shrink: 0;
+    }
+    .input-field {
+      flex: 1; padding: 10px 16px;
+      border: 1.5px solid #e2e8f0; border-radius: 24px;
+      font-size: 15px; outline: none; font-family: inherit;
+      background: #fafafa; transition: border-color 0.2s, background 0.2s;
+    }
+    .input-field:focus { border-color: #ff6b6b; background: #fff; }
+    .input-field::placeholder { color: #a0aec0; }
+    .send-btn {
+      padding: 10px 22px; background: #ff6b6b; color: #fff;
+      border: none; border-radius: 24px; font-size: 14px; font-weight: 700;
+      cursor: pointer; transition: background 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+    .send-btn:hover:not(:disabled) { background: #fc5c65; transform: translateY(-1px); }
+    .send-btn:active:not(:disabled) { transform: translateY(0); }
+    .send-btn:disabled { background: #fca5a5; cursor: not-allowed; }
+
+    /* ── Vocab pane ──────────────────────────────────────────────────── */
+    .vocab-list { flex: 1; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+    .vocab-header { font-size: 13px; color: #718096; margin-bottom: 2px; }
+    .vocab-card {
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+      padding: 12px 16px;
+      transition: box-shadow 0.15s;
+    }
+    .vocab-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .vc-hangul { font-size: 20px; font-weight: 700; color: #2d3748; }
+    .vc-rom { font-size: 12px; color: #a0aec0; font-style: italic; margin-top: 1px; }
+    .vc-meaning { font-size: 14px; color: #4a5568; margin-top: 3px; }
+    .vc-example { font-size: 12px; color: #718096; margin-top: 6px; padding-top: 6px; border-top: 1px solid #f0f4f8; }
+    .empty-state {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; color: #a0aec0; gap: 10px; text-align: center;
+      padding: 40px;
+    }
+    .empty-icon { font-size: 52px; }
+
+    /* ── Progress pane ───────────────────────────────────────────────── */
+    .progress-scroll { flex: 1; overflow-y: auto; padding: 16px 20px; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .stat-card {
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+      padding: 14px 16px;
+    }
+    .stat-card h3 {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;
+      color: #a0aec0; margin-bottom: 6px;
+    }
+    .stat-value { font-size: 26px; font-weight: 800; color: #2d3748; line-height: 1; }
+    .stat-sub { font-size: 12px; color: #a0aec0; margin-top: 3px; }
+    .bar-track { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin-top: 8px; }
+    .bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+    .bar-coral { background: linear-gradient(90deg, #ff6b6b, #ff8e53); }
+    .bar-green { background: linear-gradient(90deg, #48bb78, #38a169); }
+    .bar-blue  { background: linear-gradient(90deg, #63b3ed, #4299e1); }
+    .full-card { grid-column: 1 / -1; }
+
+    /* ── Achievement toast ───────────────────────────────────────────── */
+    .toast {
+      position: fixed; top: 16px; left: 50%;
+      transform: translateX(-50%) translateY(-90px);
+      background: #fff; border: 2px solid #ffd700;
+      border-radius: 12px; padding: 11px 22px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.14);
+      font-size: 15px; font-weight: 700; color: #744210;
+      z-index: 9999; white-space: nowrap;
+      transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1);
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── Error banner ────────────────────────────────────────────────── */
+    .error-banner {
+      background: #fff5f5; border-bottom: 1px solid #fed7d7;
+      color: #c53030; padding: 9px 20px; font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    /* ── Responsive ──────────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .header { padding: 8px 12px; gap: 8px; }
+      .xp-section { gap: 6px; }
+      .messages { padding: 12px; }
+      .input-area { padding: 10px 12px; }
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useRef, useCallback } = React;
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+
+    function deriveLevel(xp) {
+      if (xp < 200)  return { label: '입문 Beginner',    progress: xp,       max: 200 };
+      if (xp < 600)  return { label: '초급 Intermediate', progress: xp - 200, max: 400 };
+      return              { label: '중급 Advanced',      progress: Math.min(xp - 600, 400), max: 400 };
+    }
+
+    function pct(value, max) {
+      return `${Math.min(100, Math.round((value / Math.max(1, max)) * 100))}%`;
+    }
+
+    // ── Main App ──────────────────────────────────────────────────────────────
+
+    function App() {
+      const [pane,            setPane]           = useState('chat');
+      const [messages,        setMessages]       = useState([]);
+      const [input,           setInput]          = useState('');
+      const [isLoading,       setIsLoading]      = useState(false);
+      const [xp,              setXp]             = useState(0);
+      const [streak,          setStreak]         = useState(0);
+      const [romLevel,        setRomLevel]       = useState(100);
+      const [savedVocab,      setSavedVocab]     = useState([]);
+      const [achievement,     setAchievement]    = useState(null);
+      const [pendingChallenge,setPendingChallenge] = useState(null);
+      const [sessionId,       setSessionId]      = useState(null);
+      const [dayStatus,       setDayStatus]      = useState(null);
+      const [grammarStats,    setGrammarStats]   = useState({ correct: 0, total: 0 });
+      const [error,           setError]          = useState(null);
+
+      const historyRef    = useRef([]);
+      const msgCountRef   = useRef(0);
+      const bottomRef     = useRef(null);
+      const inputRef      = useRef(null);
+
+      // Auto-scroll on new messages
+      useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, [messages, isLoading]);
+
+      // Focus input when switching to chat pane
+      useEffect(() => {
+        if (pane === 'chat') setTimeout(() => inputRef.current?.focus(), 50);
+      }, [pane]);
+
+      // ── Init ──────────────────────────────────────────────────────────────
+      useEffect(() => {
+        fetch('/v1/status/today')
+          .then(r => r.json()).then(setDayStatus).catch(() => {});
+
+        fetch('/v1/session/start', { method: 'POST' })
+          .then(r => r.json()).then(s => setSessionId(s.sessionId)).catch(() => {});
+
+        // Initial greeting from tutor
+        setIsLoading(true);
+        fetch('/v1/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: [{ role: 'user', content: 'Please greet the learner warmly in Korean, introduce yourself as their tutor, and ask how they are today. Keep it beginner-friendly with romanization.' }],
+            romanizationLevel: 100
+          })
+        })
+          .then(r => r.json())
+          .then(res => {
+            if (res.error) { setError(res.error); return; }
+            setMessages([{
+              role: 'tutor',
+              text: res.tutorMessage,
+              romanization: res.romanization,
+              feedbackNote: null,
+              vocabWord: res.vocabWord,
+              xpAwarded: 0
+            }]);
+            historyRef.current = [{ role: 'assistant', content: res.tutorMessage }];
+          })
+          .catch(e => setError('Could not reach tutor. Is OPENAI_API_KEY set? ' + e.message))
+          .finally(() => setIsLoading(false));
+      }, []);
+
+      // ── Achievement helper ────────────────────────────────────────────────
+      const triggerAchievement = useCallback((text) => {
+        setAchievement(text);
+        setTimeout(() => setAchievement(null), 3500);
+      }, []);
+
+      const checkAchievements = useCallback((newXp, newStreak, vocabCount, msgCount) => {
+        if (msgCount === 1)                          return triggerAchievement('🎉 첫 대화! First conversation!');
+        if (newStreak === 5)                         return triggerAchievement('🔥 5 Streak! You\'re on fire!');
+        if (newStreak === 10)                        return triggerAchievement('💥 10 Streak! Incredible!');
+        if (vocabCount === 1)                        return triggerAchievement('📖 첫 단어! First word saved!');
+        if (vocabCount === 10)                       return triggerAchievement('📚 단어 10개! 10 words learned!');
+        if (newXp >= 100 && newXp - 25 < 100)       return triggerAchievement('⭐ 100 XP! You\'re getting started!');
+        if (newXp >= 300 && newXp - 25 < 300)       return triggerAchievement('🌟 300 XP! Intermediate level!');
+        if (newXp >= 600 && newXp - 25 < 600)       return triggerAchievement('🏆 600 XP! Advanced learner!');
+      }, [triggerAchievement]);
+
+      // ── Send message ──────────────────────────────────────────────────────
+      const handleSend = useCallback(async () => {
+        const trimmed = input.trim();
+        if (!trimmed || isLoading) return;
+        setInput('');
+
+        // Challenge answer
+        if (pendingChallenge) {
+          const norm = s => s.trim().toLowerCase().replace(/[!?.,]/g, '');
+          const correct = norm(trimmed) === norm(pendingChallenge.correctAnswer);
+          const bonusXp = correct ? pendingChallenge.xpReward : 0;
+          const reply = correct
+            ? `정답이에요! 맞았어요! 🎯 +${bonusXp} XP`
+            : `아쉽네요... 정답은: "${pendingChallenge.correctAnswer}"`;
+          setMessages(prev => [
+            ...prev,
+            { role: 'user',  text: trimmed },
+            { role: 'tutor', text: reply, romanization: '', feedbackNote: null, vocabWord: null, xpAwarded: bonusXp }
+          ]);
+          if (correct) setXp(prev => prev + bonusXp);
+          setPendingChallenge(null);
+          historyRef.current.push({ role: 'user',      content: trimmed });
+          historyRef.current.push({ role: 'assistant', content: reply  });
+          return;
+        }
+
+        // Regular message
+        setMessages(prev => [...prev, { role: 'user', text: trimmed }]);
+        setIsLoading(true);
+        msgCountRef.current += 1;
+
+        try {
+          const history = historyRef.current.slice(-20);
+          const res = await fetch('/v1/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              messages: [...history, { role: 'user', content: trimmed }],
+              romanizationLevel: romLevel
+            })
+          }).then(r => r.json());
+
+          if (res.error) throw new Error(res.error);
+
+          const totalXp  = (res.xpDelta || 0) + (res.bonusXp || 0);
+          const newXp    = xp + totalXp;
+          const newStreak = res.streakMaintained ? streak + 1 : 0;
+
+          setGrammarStats(prev => ({
+            correct: prev.correct + (res.streakMaintained ? 1 : 0),
+            total:   prev.total   + 1
+          }));
+
+          // Save vocab to DB + local state
+          let newVocabCount = savedVocab.length;
+          if (res.vocabWord?.hangul) {
+            const already = savedVocab.some(v => v.hangul === res.vocabWord.hangul);
+            if (!already) {
+              fetch('/v1/vocab/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  text: res.vocabWord.hangul,
+                  meaning: res.vocabWord.meaning,
+                  exampleKo: res.vocabWord.example || '',
+                  source: 'web_tutor'
+                })
+              }).catch(() => {});
+              setSavedVocab(prev => [...prev, res.vocabWord]);
+              newVocabCount += 1;
+            }
+          }
+
+          // Credit session time
+          if (sessionId) {
+            fetch('/v1/session/chat-activity', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ sessionId, activeSeconds: 30 })
+            }).then(r => r.json()).then(status => {
+              if (status?.completedSeconds != null) setDayStatus(status);
+            }).catch(() => {});
+          }
+
+          // Romanization fade on correct messages
+          if (res.streakMaintained) {
+            setRomLevel(prev => Math.max(0, prev - 0.5));
+          }
+
+          setMessages(prev => [...prev, {
+            role: 'tutor',
+            text:         res.tutorMessage,
+            romanization: res.romanization,
+            feedbackNote: res.feedbackNote || null,
+            vocabWord:    res.vocabWord    || null,
+            xpAwarded:    totalXp
+          }]);
+
+          setXp(newXp);
+          setStreak(newStreak);
+
+          historyRef.current.push({ role: 'user',      content: trimmed          });
+          historyRef.current.push({ role: 'assistant', content: res.tutorMessage });
+
+          if (res.miniChallenge)  setPendingChallenge(res.miniChallenge);
+          if (res.achievement)    triggerAchievement(res.achievement);
+          else                    checkAchievements(newXp, newStreak, newVocabCount, msgCountRef.current);
+
+        } catch (e) {
+          setMessages(prev => [...prev, {
+            role: 'tutor', text: `오류가 생겼어요. Error: ${e.message}`,
+            romanization: '', feedbackNote: null, vocabWord: null, xpAwarded: 0
+          }]);
+        } finally {
+          setIsLoading(false);
+        }
+      }, [input, isLoading, pendingChallenge, romLevel, xp, streak, savedVocab, sessionId, triggerAchievement, checkAchievements]);
+
+      const handleKey = useCallback(e => {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
+      }, [handleSend]);
+
+      // ── Derived values ────────────────────────────────────────────────────
+      const { label: levelLabel, progress: levelProgress, max: levelMax } = deriveLevel(xp);
+      const accuracyPct = grammarStats.total > 0
+        ? Math.round(grammarStats.correct / grammarStats.total * 100) : 0;
+
+      // ── Render ────────────────────────────────────────────────────────────
+      return (
+        <React.Fragment>
+          {/* Achievement toast */}
+          <div className={`toast ${achievement ? 'show' : ''}`}>{achievement}</div>
+
+          {/* Header */}
+          <div className="header">
+            <div className="header-title">🇰🇷 한국어</div>
+            <div className="xp-section">
+              <span className="level-label">{levelLabel}</span>
+              <div className="xp-bar-track">
+                <div className="xp-bar-fill" style={{ width: pct(levelProgress, levelMax) }} />
+              </div>
+              <span className="xp-count">{xp} XP</span>
+            </div>
+            <div className="streak-badge" title="Message streak">🔥 {streak}</div>
+            <button
+              className="rom-toggle"
+              onClick={() => setRomLevel(prev => prev > 50 ? 0 : 100)}
+              title="Toggle romanization support"
+            >
+              rom {Math.round(romLevel)}%
+            </button>
+          </div>
+
+          {/* Tabs */}
+          <div className="tabbar">
+            {[['chat','💬 대화'],['vocab','📖 단어장'],['progress','📊 진행']].map(([id, label]) => (
+              <div key={id} className={`tab ${pane === id ? 'active' : ''}`} onClick={() => setPane(id)}>
+                {label}
+              </div>
+            ))}
+          </div>
+
+          {/* Error */}
+          {error && <div className="error-banner">⚠️ {error}</div>}
+
+          {/* ── Chat pane ── */}
+          {pane === 'chat' && (
+            <div className="pane">
+              <div className="messages">
+                {messages.map((msg, i) => (
+                  <div key={i} className={`msg-row ${msg.role}`}>
+                    <div className="bubble">{msg.text}</div>
+                    {msg.role === 'tutor' && msg.romanization && romLevel >= 40 && (
+                      <div className={`romanization ${romLevel < 70 ? 'faint' : ''}`}>
+                        {msg.romanization}
+                      </div>
+                    )}
+                    {msg.role === 'tutor' && msg.feedbackNote && (
+                      <div className="feedback-note">{msg.feedbackNote}</div>
+                    )}
+                    {msg.role === 'tutor' && msg.vocabWord && (
+                      <div className="vocab-chip">
+                        📖 <strong>{msg.vocabWord.hangul}</strong> ({msg.vocabWord.romanization}) — {msg.vocabWord.meaning}
+                      </div>
+                    )}
+                    {msg.role === 'tutor' && msg.xpAwarded > 0 && (
+                      <div className="xp-pop">+{msg.xpAwarded} XP</div>
+                    )}
+                  </div>
+                ))}
+
+                {isLoading && (
+                  <div className="msg-row tutor">
+                    <div className="typing-bubble">
+                      <div className="dot"/><div className="dot"/><div className="dot"/>
+                    </div>
+                  </div>
+                )}
+
+                {pendingChallenge && !isLoading && (
+                  <div className="challenge-box">🎯 {pendingChallenge.question}</div>
+                )}
+
+                <div ref={bottomRef} />
+              </div>
+
+              <div className="input-area">
+                <input
+                  ref={inputRef}
+                  className="input-field"
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={handleKey}
+                  placeholder="Type in Korean or English…"
+                  disabled={isLoading}
+                  autoFocus
+                />
+                <button
+                  className="send-btn"
+                  onClick={handleSend}
+                  disabled={isLoading || !input.trim()}
+                >
+                  전송
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ── Vocab pane ── */}
+          {pane === 'vocab' && (
+            <div className="pane">
+              {savedVocab.length === 0 ? (
+                <div className="empty-state">
+                  <div className="empty-icon">📖</div>
+                  <div style={{ fontWeight: 600 }}>단어장이 비어 있어요</div>
+                  <div style={{ fontSize: 13 }}>Words highlighted during chat are saved here</div>
+                </div>
+              ) : (
+                <div className="vocab-list">
+                  <div className="vocab-header">{savedVocab.length} words learned this session</div>
+                  {[...savedVocab].reverse().map((v, i) => (
+                    <div key={i} className="vocab-card">
+                      <div className="vc-hangul">{v.hangul}</div>
+                      {v.romanization && <div className="vc-rom">{v.romanization}</div>}
+                      <div className="vc-meaning">{v.meaning}</div>
+                      {v.example && <div className="vc-example">{v.example}</div>}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Progress pane ── */}
+          {pane === 'progress' && (
+            <div className="pane">
+              <div className="progress-scroll">
+                <div className="stats-grid">
+                  {/* XP & Level */}
+                  <div className="stat-card">
+                    <h3>XP &amp; Level</h3>
+                    <div className="stat-value">{xp}</div>
+                    <div className="stat-sub">{levelLabel}</div>
+                    <div className="bar-track">
+                      <div className="bar-fill bar-coral" style={{ width: pct(levelProgress, levelMax) }} />
+                    </div>
+                  </div>
+
+                  {/* Streak */}
+                  <div className="stat-card">
+                    <h3>Message Streak</h3>
+                    <div className="stat-value">🔥 {streak}</div>
+                    <div className="stat-sub">consecutive correct</div>
+                  </div>
+
+                  {/* Grammar */}
+                  <div className="stat-card">
+                    <h3>Grammar Accuracy</h3>
+                    <div className="stat-value">{accuracyPct}%</div>
+                    <div className="stat-sub">{grammarStats.correct} / {grammarStats.total} messages</div>
+                    <div className="bar-track">
+                      <div className="bar-fill bar-green" style={{ width: `${accuracyPct}%` }} />
+                    </div>
+                  </div>
+
+                  {/* Vocab */}
+                  <div className="stat-card">
+                    <h3>Vocab Saved</h3>
+                    <div className="stat-value">{savedVocab.length}</div>
+                    <div className="stat-sub">words this session</div>
+                  </div>
+
+                  {/* Daily progress */}
+                  {dayStatus && (
+                    <div className="stat-card full-card">
+                      <h3>Daily Practice Goal</h3>
+                      <div className="stat-value" style={{ fontSize: 18 }}>
+                        {dayStatus.completedSeconds}s &nbsp;/&nbsp; {dayStatus.requiredSeconds}s
+                      </div>
+                      <div className="stat-sub">
+                        Day streak: {dayStatus.streak} · Rank: {dayStatus.rank}
+                        {dayStatus.debtSeconds > 0 ? ` · Debt: ${dayStatus.debtSeconds}s` : ''}
+                      </div>
+                      <div className="bar-track">
+                        <div className="bar-fill bar-blue" style={{ width: pct(dayStatus.completedSeconds, dayStatus.requiredSeconds) }} />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Romanization */}
+                  <div className="stat-card full-card">
+                    <h3>Romanization Support</h3>
+                    <div className="stat-value" style={{ fontSize: 18 }}>{Math.round(romLevel)}%</div>
+                    <div className="stat-sub">
+                      {romLevel >= 70 ? 'Full romanization shown'
+                        : romLevel >= 40 ? 'Romanization fading — you\'re getting there!'
+                        : 'Romanization hidden — reading Hangul only!'}
+                    </div>
+                    <div className="bar-track">
+                      <div className="bar-fill" style={{
+                        width: `${romLevel}%`,
+                        background: romLevel > 60 ? '#a0aec0' : '#48bb78'
+                      }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </React.Fragment>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
