@@ -91,7 +91,9 @@ async function pickOllamaModel(): Promise<string> {
   const data = await res.json() as { models: Array<{ name: string }> };
   if (!data.models?.length) throw new Error('No Ollama models installed. Run: ollama pull qwen2.5');
   const names = data.models.map(m => m.name);
-  return PREFERRED_MODELS.find(p => names.some(n => n.startsWith(p))) ?? names[0];
+  // Return the actual installed name (e.g. "qwen2.5:7b"), not the short prefix
+  const match = PREFERRED_MODELS.map(p => names.find(n => n.startsWith(p))).find(Boolean);
+  return match ?? names[0];
 }
 
 async function callOllama(
