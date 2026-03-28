@@ -274,6 +274,7 @@
       const [dayStatus,       setDayStatus]      = useState(null);
       const [grammarStats,    setGrammarStats]   = useState({ correct: 0, total: 0 });
       const [error,           setError]          = useState(null);
+      const [backend,         setBackend]        = useState(null); // 'claude' | 'ollama:model'
 
       const historyRef    = useRef([]);
       const msgCountRef   = useRef(0);
@@ -311,6 +312,7 @@
           .then(r => r.json())
           .then(res => {
             if (res.error) { setError(res.error); return; }
+            if (res._backend) setBackend(res._backend);
             setMessages([{
               role: 'tutor',
               text: res.tutorMessage,
@@ -385,6 +387,7 @@
           }).then(r => r.json());
 
           if (res.error) throw new Error(res.error);
+          if (res._backend) setBackend(res._backend);
 
           const totalXp  = (res.xpDelta || 0) + (res.bonusXp || 0);
           const newXp    = xp + totalXp;
@@ -478,6 +481,16 @@
           {/* Header */}
           <div className="header">
             <div className="header-title">🇰🇷 한국어</div>
+            {backend && (
+              <span style={{
+                fontSize: 11, padding: '2px 8px', borderRadius: 10,
+                background: backend.startsWith('claude') ? '#e9d8fd' : '#c6f6d5',
+                color: backend.startsWith('claude') ? '#553c9a' : '#276749',
+                whiteSpace: 'nowrap', fontWeight: 600
+              }}>
+                {backend.startsWith('claude') ? '✦ Claude' : `🦙 ${backend.replace('ollama:', '')}`}
+              </span>
+            )}
             <div className="xp-section">
               <span className="level-label">{levelLabel}</span>
               <div className="xp-bar-track">

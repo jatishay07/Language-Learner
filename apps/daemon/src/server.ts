@@ -13,6 +13,138 @@ import { APP_HOST, APP_PORT, LearnerEngine } from '../../../packages/core/src/in
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+// ── Shared response type ──────────────────────────────────────────────────────
+
+interface TutorResponse {
+  tutorMessage: string;
+  romanization: string;
+  feedbackNote: string;
+  vocabWord: unknown;
+  xpDelta: number;
+  bonusXp: number;
+  streakMaintained: boolean;
+  achievement: unknown;
+  miniChallenge: unknown;
+  _backend?: string;
+}
+
+const FALLBACK_RESPONSE: TutorResponse = {
+  tutorMessage: '죄송해요, 다시 말씀해 주세요.',
+  romanization: 'joesonghaeyo, dasi malsseum hae juseyo.',
+  feedbackNote: '',
+  vocabWord: null,
+  xpDelta: 5,
+  bonusXp: 0,
+  streakMaintained: true,
+  achievement: null,
+  miniChallenge: null
+};
+
+function parseTutorJson(raw: string): TutorResponse {
+  try {
+    return JSON.parse(raw) as TutorResponse;
+  } catch {
+    return { ...FALLBACK_RESPONSE, tutorMessage: raw || FALLBACK_RESPONSE.tutorMessage };
+  }
+}
+
+// ── Anthropic call ────────────────────────────────────────────────────────────
+
+async function callAnthropic(
+  messages: Array<{ role: string; content: string }>,
+  romLevel: number,
+  apiKey: string
+): Promise<TutorResponse> {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 600,
+      system: buildTutorSystemPrompt(romLevel),
+      messages
+    })
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Anthropic ${res.status}: ${body}`);
+  }
+
+  const data = await res.json() as { content: Array<{ type: string; text: string }> };
+  const raw = data.content.find(b => b.type === 'text')?.text ?? '{}';
+  return { ...parseTutorJson(raw), _backend: 'claude' };
+}
+
+// ── Ollama call ───────────────────────────────────────────────────────────────
+
+const OLLAMA_BASE = 'http://localhost:11434';
+const PREFERRED_MODELS = ['qwen2.5', 'llama3.1', 'llama3', 'gemma2', 'mistral', 'llama2'];
+
+async function pickOllamaModel(): Promise<string> {
+  const res = await fetch(`${OLLAMA_BASE}/api/tags`);
+  if (!res.ok) throw new Error('Ollama is not running. Install from ollama.ai then run: ollama pull qwen2.5');
+  const data = await res.json() as { models: Array<{ name: string }> };
+  if (!data.models?.length) throw new Error('No Ollama models installed. Run: ollama pull qwen2.5');
+  const names = data.models.map(m => m.name);
+  return PREFERRED_MODELS.find(p => names.some(n => n.startsWith(p))) ?? names[0];
+}
+
+async function callOllama(
+  messages: Array<{ role: string; content: string }>,
+  romLevel: number
+): Promise<TutorResponse> {
+  const model = await pickOllamaModel();
+
+  const res = await fetch(`${OLLAMA_BASE}/api/chat`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      model,
+      messages: [
+        { role: 'system', content: buildTutorSystemPrompt(romLevel) },
+        ...messages
+      ],
+      stream: false,
+      format: 'json'   // Ollama native JSON mode
+    })
+  });
+
+  if (!res.ok) throw new Error(`Ollama ${res.status}`);
+  const data = await res.json() as { message: { content: string } };
+  return { ...parseTutorJson(data.message?.content ?? '{}'), _backend: `ollama:${model}` };
+}
+
+// ── Router: Anthropic first, Ollama fallback ──────────────────────────────────
+
+async function callTutor(
+  messages: Array<{ role: string; content: string }>,
+  romLevel: number
+): Promise<TutorResponse & { error?: string }> {
+  const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
+
+  if (apiKey) {
+    try {
+      return await callAnthropic(messages, romLevel, apiKey);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      // Fall through to Ollama on auth/quota errors or any network failure
+      console.error(`[chat] Anthropic failed (${msg}) — trying Ollama`);
+    }
+  }
+
+  try {
+    return await callOllama(messages, romLevel);
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return { ...FALLBACK_RESPONSE, error: `All backends failed. ${msg}` };
+  }
+}
+
 function buildTutorSystemPrompt(romLevel: number): string {
   return `You are a warm, encouraging Korean language tutor for a beginner learner.
 Goals: understand K-dramas, converse with Korean speakers, travel to Korea, read Korean webnovels.
@@ -78,59 +210,14 @@ export function createDaemonServer(options?: DaemonServerOptions) {
     }
   });
 
-  // ── Chat endpoint (Anthropic proxy) ──────────────────────────────────────────
+  // ── Chat endpoint (Anthropic → Ollama fallback) ───────────────────────────────
 
-  fastify.post('/v1/chat', async (request, reply) => {
+  fastify.post('/v1/chat', async (request) => {
     const { messages, romanizationLevel = 100 } = request.body as {
       messages: Array<{ role: 'user' | 'assistant'; content: string }>;
       romanizationLevel?: number;
     };
-
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) {
-      reply.status(500);
-      return { error: 'ANTHROPIC_API_KEY environment variable is not set. Run: export ANTHROPIC_API_KEY=sk-ant-...' };
-    }
-
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 600,
-        system: buildTutorSystemPrompt(romanizationLevel),
-        messages
-      })
-    });
-
-    if (!res.ok) {
-      const err = await res.text();
-      reply.status(502);
-      return { error: `Anthropic error ${res.status}: ${err}` };
-    }
-
-    const data = await res.json() as { content: Array<{ type: string; text: string }> };
-    const raw = data.content.find(b => b.type === 'text')?.text ?? '{}';
-
-    try {
-      return JSON.parse(raw);
-    } catch {
-      return {
-        tutorMessage: raw || '죄송해요, 다시 말씀해 주세요.',
-        romanization: '',
-        feedbackNote: '',
-        vocabWord: null,
-        xpDelta: 5,
-        bonusXp: 0,
-        streakMaintained: true,
-        achievement: null,
-        miniChallenge: null
-      };
-    }
+    return callTutor(messages, romanizationLevel);
   });
 
   // ── Chat activity (credits session time without needing a vocab exercise) ───
